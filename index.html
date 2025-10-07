@@ -8,27 +8,49 @@
       body {
         text-align: center; 
         font-family: Arial, sans-serif; 
+        margin: 0;
+        height: 200vh; /* makes the page long enough to scroll */
+        overflow-x: hidden; /* prevent horizontal scroll */
       }
+
       h1 {
         font-size: 50px; 
-        margin-bottom: 10px; /* space between title and subtitle */
+        margin: 40px 0 10px 0; 
       }
+
       p {
         font-size: 20px; 
         color: #555;
         margin-top: 0;
       }
+
       img {
         display: block; 
         margin: 30px auto;
-        width: 400px; 
-        max-width: 100%; 
+        width: 60%; 
+        max-width: 1200px; 
+        height: auto; 
+        transition: transform 0.2s ease-out; /* smooth scaling */
       }
     </style>
   </head>
   <body>
     <h1>Why Do We Dream About Teeth Falling Out?</h1>
     <p>It isn’t just random, it’s symbolic.</p>
-    <img src="smile.png" alt="Cartoon smile">
+    <img src="smile.png" alt="Cartoon smile" id="smile">
+
+    <script>
+      const image = document.getElementById('smile');
+
+      window.addEventListener('scroll', () => {
+        // get how far you've scrolled
+        const scrollY = window.scrollY;
+
+        // scale the image slightly as you scroll
+        const scale = 1 + scrollY / 1000; // adjust "1000" for sensitivity
+
+        image.style.transform = `scale(${scale})`;
+      });
+    </script>
   </body>
 </html>
