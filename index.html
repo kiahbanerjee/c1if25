@@ -19,6 +19,26 @@
         text-align: center;
       }
 
+      /* Next button in the top right */
+      .next-button {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        background-color: #fff;
+        color: #333;
+        text-decoration: none;
+        padding: 10px 18px;
+        border-radius: 25px;
+        font-weight: bold;
+        transition: all 0.3s ease;
+        z-index: 5;
+      }
+
+      .next-button:hover {
+        background-color: #333;
+        color: #fff;
+      }
+
       /* Flexbox container for heading + paragraph */
       .container {
         display: flex;
@@ -67,6 +87,9 @@
     </style>
   </head>
   <body>
+    <!-- Next page button -->
+    <a href="dream2.html" class="next-button">Next →</a>
+
     <div class="container">
       <h1>Why Do We Dream About Teeth Falling Out?</h1>
       <p>It isn’t just random, it’s symbolic.</p>
