@@ -56,20 +56,44 @@
     }
 
     .bird, .flying-person {
-  position: absolute;
-  opacity: 0;
-  transform: translateY(120vh); /* Start BELOW the screen */
-  transition: transform 0.1s linear, opacity 0.1s linear;
-}
-
+      position: absolute;
+      opacity: 0;
+      transform: translateY(120vh);
+      transition: transform 0.1s linear, opacity 0.1s linear;
+      pointer-events: auto;
+      cursor: grab;
+    }
 
     .bird { width: 130px; }
     .flying-person { width: 250px; left: 50%; transform: translate(-50%, 200px); }
+
+    .meaning-text {
+      position: absolute;
+      opacity: 0;
+      color: #000;
+      font-size: 22px;
+      font-weight: bold;
+      transition: opacity 0.2s linear;
+      pointer-events: auto;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0px);
+      }
+      50% {
+        transform: translateY(-20px);
+      }
+    }
+
+
   </style>
 </head>
 <body>
   <header>
     <a href="index.html" class="back-button">← Previous</a>
+    <a href="Dream-3.html" class="back-button">Next →</a>
   </header>
 
   <div class="text-container">
@@ -83,30 +107,141 @@
     <img src="bird2.png" class="bird b3" style="left: 35%;" />
     <img src="bird2.png" class="bird b4" style="left: 80%;" />
     <img src="flying.png" class="flying-person" />
+
+    <!-- meaning texts -->
+    <div class="meaning-text" style="top: 20%; left: 10%;">Meaning</div>
+    <div class="meaning-text" style="top: 50%; left: 70%;">Meaning</div>
+    <div class="meaning-text" style="top: 65%; left: 25%;">Meaning</div>
+    <div class="meaning-text" style="top: 35%; left: 55%;">Meaning</div>
   </div>
 
   <script>
     const birds = document.querySelectorAll(".bird");
     const person = document.querySelector(".flying-person");
+    const meanings = document.querySelectorAll(".meaning-text");
 
+    // ---------- Scroll behavior ----------
     window.addEventListener("scroll", () => {
-  let progress = window.scrollY / (window.innerHeight * 0.6);
+      let progress = window.scrollY / (window.innerHeight * 0.6);
+      if (progress > 0.39) progress = 0.39;
 
-  // limit it so it stops early
-  if (progress > 0.39) progress = 0.39;
+      birds.forEach((bird) => {
+        bird.style.opacity = progress >= 0.39 ? 1 : progress * 2;
+        bird.style.transform = `translateY(${120 - progress * 200}vh)`; 
+      });
 
-  birds.forEach((bird) => {
-    // clamp opacity to 1 at the stop point
-    bird.style.opacity = progress >= 0.39 ? 1 : progress * 2;
-    bird.style.transform = `translateY(${120 - progress * 200}vh)`; 
-  });
+      // Reset dragged position when scrolling
+      if (isDragging === false) {
+        person.style.left = '50%';
+        person.style.top = '';
+      }
+      
+      person.style.opacity = progress >= 0.39 ? 1 : progress * 2;
+      person.style.transform = `translate(-50%, ${120 - progress * 200}vh)`;
 
-  person.style.opacity = progress >= 0.39 ? 1 : progress * 2;
-  person.style.transform = `translate(-50%, ${120 - progress * 200}vh)`;
-});
+      meanings.forEach(text => {
+        let fadeStart = window.innerHeight * 0.2; 
+        let fadeEnd = window.innerHeight * 0.5;   
+        let opacity = (window.scrollY - fadeStart) / (fadeEnd - fadeStart);
+        opacity = Math.max(0, Math.min(1, opacity));
+        text.style.opacity = opacity;
+      });
+    });
 
+    // ---------- Drag behavior ----------
+    const flyingPerson = document.querySelector('.flying-person');
+    let isDragging = false;
+    let offsetX, offsetY;
 
+    flyingPerson.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      const rect = flyingPerson.getBoundingClientRect();
+      offsetX = e.clientX - rect.left;
+      offsetY = e.clientY - rect.top;
+      flyingPerson.style.cursor = 'grabbing';
+      flyingPerson.style.transition = 'none';
+    });
 
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      flyingPerson.style.left = `${e.clientX - offsetX}px`;
+      flyingPerson.style.top = `${e.clientY - offsetY}px`;
+      flyingPerson.style.transform = `translate(0, 0)`;
+      checkCollisions();
+    });
+
+    window.addEventListener('mouseup', () => {
+      isDragging = false;
+      flyingPerson.style.cursor = 'grab';
+      flyingPerson.style.transition = 'transform 0.1s linear, opacity 0.1s linear';
+    });
+
+    // Touch support
+    flyingPerson.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      const rect = flyingPerson.getBoundingClientRect();
+      offsetX = e.touches[0].clientX - rect.left;
+      offsetY = e.touches[0].clientY - rect.top;
+      flyingPerson.style.transition = 'none';
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      flyingPerson.style.left = `${e.touches[0].clientX - offsetX}px`;
+      flyingPerson.style.top = `${e.touches[0].clientY - offsetY}px`;
+      flyingPerson.style.transform = `translate(0, 0)`;
+    });
+
+    window.addEventListener('touchend', () => {
+      isDragging = false;
+      flyingPerson.style.transition = 'transform 0.1s linear, opacity 0.1s linear';
+    });
+
+    // ---------- Collision detection ----------
+    const collectedMeanings = new Set();
+    const meaningInterpretations = [
+      "Freedom: Dreams of flying often symbolize a desire to break free from restrictions and limitations in your life.",
+      "Ambition: Flying in dreams can represent your aspirations and goals, showing you're reaching for higher achievements.",
+      "Perspective: Flying dreams may indicate you're gaining a new viewpoint on a situation, seeing things from above.",
+      "Control: Dreams of flight can reflect feelings about how much control you have over your life's direction."
+    ];
+    
+    function checkCollisions() {
+      const personRect = flyingPerson.getBoundingClientRect();
+      
+      meanings.forEach((meaning, index) => {
+        const meaningRect = meaning.getBoundingClientRect();
+        
+        // Check if rectangles overlap
+        if (!(personRect.right < meaningRect.left || 
+              personRect.left > meaningRect.right || 
+              personRect.bottom < meaningRect.top || 
+              personRect.top > meaningRect.bottom)) {
+          // Collision detected!
+          if (!collectedMeanings.has(index)) {
+            collectedMeanings.add(index);
+            alert(meaningInterpretations[index]);
+          }
+        }
+      });
+    }
+
+    // Check for collisions during drag
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      flyingPerson.style.left = `${e.clientX - offsetX}px`;
+      flyingPerson.style.top = `${e.clientY - offsetY}px`;
+      flyingPerson.style.transform = `translate(0, 0)`;
+      checkCollisions();
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      flyingPerson.style.left = `${e.touches[0].clientX - offsetX}px`;
+      flyingPerson.style.top = `${e.touches[0].clientY - offsetY}px`;
+      flyingPerson.style.transform = `translate(0, 0)`;
+      checkCollisions();
+    });
   </script>
 </body>
 </html>
