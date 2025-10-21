@@ -34,7 +34,7 @@
       text-decoration:none;
       font-weight:700;
       font-size:18px;
-      z-index:40;
+      z-index:100;
     }
     .next-button:hover{opacity:.8}
 
@@ -138,7 +138,7 @@
       height:var(--panel-size-vw);
       max-width:80vmin;
       max-height:80vmin;
-      background-image: url('tooth2.png'); /* your silhouette */
+      background-image: url('tooth2.png'); 
       background-repeat:no-repeat;
       background-position:center;
       background-size: contain;
@@ -156,12 +156,12 @@
     /* text inside tooth, absolutely positioned for irregular shape */
     .tooth-text{
       position:absolute;
-      top:28%;       /* move text higher in irregular tooth */
+      top:28%;       
       left:50%;
       transform:translateX(-50%);
       width:45%;
       max-width:70%;
-      color:#000; /* black text inside tooth */
+      color:#000; 
       text-align:center;
       font-weight:600;
       font-size:16px;
@@ -231,7 +231,7 @@ const toothText = document.getElementById('toothText');
 const interpretations = [
   { title: "Recent loss or grief", body: "Dreams of teeth falling can reflect recent experiences of loss or grief,your mind processing absence and adjustment." },
   { title: "Jealousy", body: "These dreams may signal envy or concern about someone else’s advantages, a subconscious worry about comparison." },
-  { title: "Lack of control", body: "Frequent meaning: a sense of losing control, decisions, circumstances, or direction feel uncertain." },
+  { title: "Lack of control", body: "A sense of losing control, decisions, circumstances, or direction feel uncertain." },
   { title: "Insecurity or shame", body: "They can point to personal insecurities or shame around appearance, performance, or social standing." },
   { title: "Health-related fears", body: "Sometimes they surface during concerns about health, bodily vulnerability or fear of decline." },
   { title: "Big life changes", body: "Finally, such dreams often appear around major transitions like career, relationships, or identity shifts." }
@@ -285,7 +285,7 @@ function spawnTooth(){
   const size = 80 + Math.random() * 100;
   img.style.width = size + 'px';
   img.style.top = '-' + (150 + Math.random() * 250) + 'px';
-  img.style.animationDuration = (2 + Math.random()*2) + 's';
+  img.style.animationDuration = (1 + Math.random()*2) + 's';
   document.body.appendChild(img);
   setTimeout(()=> {
     if (img && img.parentNode) img.parentNode.removeChild(img);
@@ -304,7 +304,6 @@ function showToothPanel(){
   toothPanel.classList.add('show');
   idx = 0;
   renderInterpretation(idx);
-  toothPanel.focus();
 }
 
 function renderInterpretation(i){
@@ -323,9 +322,6 @@ toothPanel.addEventListener('click', () => {
   if (idx <= interpretations.length) renderInterpretation(idx);
 });
 
-toothPanel.addEventListener('keydown', (e) => {
-  if (e.key==='Enter'||e.key===' '){ e.preventDefault(); toothPanel.click(); }
-});
 
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
