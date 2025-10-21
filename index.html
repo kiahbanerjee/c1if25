@@ -7,10 +7,10 @@
     <style>
       body {
         margin: 0;
-        height: 200vh; /* makes the page scrollable */
+        height: 200vh; 
         overflow-x: hidden;
         font-family: Arial, sans-serif;
-        background-color: #8fc4fa;
+        background-color: #000;
 
         display: flex;
         flex-direction: column;
@@ -19,25 +19,22 @@
         text-align: center;
       }
 
-      /* Next button in the top right */
-.next-button {
-  position: fixed;
-  top: 20px;
-  right: 30px;
-  color: #333;
-  text-decoration: none;
-  font-weight: bold;
-  font-size: 18px;
-  transition: opacity 0.3s ease;
-  z-index: 5;
-}
+      .next-button {
+        position: fixed;
+        top: 20px;
+        right: 30px;
+        color: #fff; 
+        text-decoration: none;
+        font-weight: bold;
+        font-size: 18px;
+        transition: opacity 0.3s ease;
+        z-index: 5;
+      }
 
-.next-button:hover {
-  opacity: 0.6;
-}
+      .next-button:hover {
+        opacity: 0.6;
+      }
 
-
-      /* Flexbox container for heading + paragraph */
       .container {
         display: flex;
         flex-direction: column;
@@ -50,23 +47,24 @@
       }
 
       h1 {
-        font-size: 50px; 
+        font-size: 50px;
         margin: 0;
+        color: #fff; 
       }
 
       p {
-        font-size: 20px; 
-        color: #555;
+        font-size: 20px;
+        color: #fff; 
         margin: 0;
       }
 
       img {
-        position: fixed; /* stays in place while scrolling */
-        top: 50%;
+        position: fixed; 
+        top: 55%;
         left: 50%;
         transform: translate(-50%, -50%) scale(1);
-        width: 70%; 
-        max-width: 1200px; 
+        width: 40%;
+        max-width: 1200px;
         height: auto;
         transition: transform 0.1s linear;
         z-index: 1;
@@ -78,14 +76,40 @@
         left: 50%;
         transform: translateX(-50%);
         font-size: 18px;
-        color: #555;
+        color: #fff; 
         font-family: Arial, sans-serif;
         z-index: 3;
+        transition: opacity 0.3s ease;
       }
+
+      
+      .click-uncover {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 50px;
+  color: #fff;
+  cursor: pointer;
+  opacity: 0;
+  pointer-events: none; /* 🔥 prevents hover/click when hidden */
+  z-index: 6;
+  transition: opacity 0.5s ease;
+}
+
+.click-uncover.show {
+  opacity: 1;
+  pointer-events: auto; /* 🔥 clickable only when shown */
+}
+
+.click-uncover:hover {
+  opacity: 0.7;
+}
+
     </style>
   </head>
   <body>
-    <!-- Next page button -->
+  
     <a href="Dream-2" class="next-button">Next →</a>
 
     <div class="container">
@@ -93,21 +117,40 @@
       <p>It isn’t just random, it’s symbolic.</p>
     </div>
 
-    <img src="smile.png" alt="Cartoon smile" id="smile">
+    <img src="smile2.png" alt="Cartoon smile" id="smile">
 
-    <div class="scroll-hint">Scroll down ↓</div>
+    <div class="scroll-hint" id="scrollHint">Scroll down ↓</div>
+
+    <div class="click-uncover" id="clickUncover">Click to uncover</div>
 
     <script>
       const image = document.getElementById('smile');
+      const clickText = document.getElementById('clickUncover');
+      const scrollHint = document.getElementById('scrollHint');
 
       window.addEventListener('scroll', () => {
         const scrollY = window.scrollY;
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.body.scrollHeight;
 
         // Scale the image as user scrolls
-        const scale = 1 + scrollY / 800; // adjust for zoom speed
+        const scale = 1 + scrollY / 800; 
         image.style.transform = `translate(-50%, -50%) scale(${scale})`;
+
+        // Show clickable text near end
+        if (scrollY + windowHeight >= documentHeight - 50) {
+          clickText.classList.add('show');
+          scrollHint.style.opacity = 0; // hide scroll hint
+        } else {
+          clickText.classList.remove('show');
+          scrollHint.style.opacity = 1; // show scroll hint
+        }
+      });
+
+      // Example click behavior
+      clickText.addEventListener('click', () => {
+        alert("You clicked to uncover!"); // Replace with your action
       });
     </script>
   </body>
 </html>
- 
