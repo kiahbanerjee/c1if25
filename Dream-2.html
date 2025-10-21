@@ -1,68 +1,112 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dreams of Flying?</title>
-    <style>
-      body {
-        font-family: Arial, sans-serif;
-        margin: 0;
-        height: 100vh;
-        overflow: hidden;
-        background-color: #b49cfb;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dreams of Flying?</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      height: 200vh; /* Slight scroll */
+      background: url('sky.jpeg') no-repeat center center/cover;
+      background-attachment: fixed;
+      overflow-x: hidden;
+    }
 
-      header {
-        width: 100%;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 20px 40px;
-        box-sizing: border-box;
-      }
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 40px;
+      box-sizing: border-box;
+    }
 
-      .back-button {
-        text-decoration: none;
-        color: #000;
-        font-size: 18px;
-        font-weight: bold;
-        transition: opacity 0.3s;
-      }
+    .back-button {
+      text-decoration: none;
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+    }
 
-      .back-button:hover {
-        opacity: 0.7;
-      }
+    .text-container {
+      position: fixed;
+      top: 80px;
+      width: 100%;
+      text-align: center;
+    }
 
-      .text-container {
-        text-align: center;
-        margin-top: -5px;
-      }
+    h1, p {
+      color: #000;
+      margin: 0;
+    }
 
-      h1 {
-        font-size: 50px;
-        margin: 0 0 10px 0;
-        color: #000;
-      }
+    h1 { font-size: 50px; }
+    p { font-size: 20px; }
 
-      p {
-        font-size: 20px;
-        color: #555;
-        margin: 0;
-      }
-    </style>
-  </head>
-  <body>
-    <header>
-      <a href="index.html" class="back-button">← Previous</a>
-    </header>
+    .sky-layer {
+      position: fixed;
+      width: 100%;
+      height: 100vh;
+      left: 0;
+      top: 0;
+      pointer-events: none;
+    }
 
-    <div class="text-container">
-      <h1>Dreams of Flying?</h1>
-      <p>Catch the stars to uncover what it means</p>
-    </div>
-  </body>
+    .bird, .flying-person {
+  position: absolute;
+  opacity: 0;
+  transform: translateY(120vh); /* Start BELOW the screen */
+  transition: transform 0.1s linear, opacity 0.1s linear;
+}
+
+
+    .bird { width: 130px; }
+    .flying-person { width: 250px; left: 50%; transform: translate(-50%, 200px); }
+  </style>
+</head>
+<body>
+  <header>
+    <a href="index.html" class="back-button">← Previous</a>
+  </header>
+
+  <div class="text-container">
+    <h1>Dreams of Flying?</h1>
+    <p>Chase the meaning</p>
+  </div>
+
+  <div class="sky-layer">
+    <img src="bird.png" class="bird b1" style="left: 15%;" />
+    <img src="bird.png" class="bird b2" style="left: 60%;" />
+    <img src="bird2.png" class="bird b3" style="left: 35%;" />
+    <img src="bird2.png" class="bird b4" style="left: 80%;" />
+    <img src="flying.png" class="flying-person" />
+  </div>
+
+  <script>
+    const birds = document.querySelectorAll(".bird");
+    const person = document.querySelector(".flying-person");
+
+    window.addEventListener("scroll", () => {
+  let progress = window.scrollY / (window.innerHeight * 0.6);
+
+  // limit it so it stops early
+  if (progress > 0.39) progress = 0.39;
+
+  birds.forEach((bird) => {
+    // clamp opacity to 1 at the stop point
+    bird.style.opacity = progress >= 0.39 ? 1 : progress * 2;
+    bird.style.transform = `translateY(${120 - progress * 200}vh)`; 
+  });
+
+  person.style.opacity = progress >= 0.39 ? 1 : progress * 2;
+  person.style.transform = `translate(-50%, ${120 - progress * 200}vh)`;
+});
+
+
+
+  </script>
+</body>
 </html>
