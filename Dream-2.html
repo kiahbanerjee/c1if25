@@ -8,7 +8,7 @@
     body {
       font-family: Arial, sans-serif;
       margin: 0;
-      height: 200vh; /* Slight scroll */
+      height: 200vh;
       background: url('sky.jpeg') no-repeat center center/cover;
       background-attachment: fixed;
       overflow-x: hidden;
@@ -108,7 +108,7 @@
     <img src="bird2.png" class="bird b4" style="left: 80%;" />
     <img src="flying.png" class="flying-person" />
 
-    <!-- meaning texts -->
+   
     <div class="meaning-text" style="top: 20%; left: 10%;">Meaning</div>
     <div class="meaning-text" style="top: 50%; left: 70%;">Meaning</div>
     <div class="meaning-text" style="top: 65%; left: 25%;">Meaning</div>
@@ -120,7 +120,7 @@
     const person = document.querySelector(".flying-person");
     const meanings = document.querySelectorAll(".meaning-text");
 
-    // ---------- Scroll behavior ----------
+    
     window.addEventListener("scroll", () => {
       let progress = window.scrollY / (window.innerHeight * 0.6);
       if (progress > 0.39) progress = 0.39;
@@ -130,7 +130,7 @@
         bird.style.transform = `translateY(${120 - progress * 200}vh)`; 
       });
 
-      // Reset dragged position when scrolling
+      
       if (isDragging === false) {
         person.style.left = '50%';
         person.style.top = '';
@@ -148,7 +148,7 @@
       });
     });
 
-    // ---------- Drag behavior ----------
+    
     const flyingPerson = document.querySelector('.flying-person');
     let isDragging = false;
     let offsetX, offsetY;
@@ -176,7 +176,7 @@
       flyingPerson.style.transition = 'transform 0.1s linear, opacity 0.1s linear';
     });
 
-    // Touch support
+   
     flyingPerson.addEventListener('touchstart', (e) => {
       isDragging = true;
       const rect = flyingPerson.getBoundingClientRect();
