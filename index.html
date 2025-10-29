@@ -1,331 +1,302 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Why Do We Dream About Teeth Falling Out?</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dreams of Failing an Exam?</title>
   <style>
-    /* basic page */
-    :root{
-      --bg:#000;
-      --fg:#fff;
-      --panel-size-vw:110vmin;
-    }
-    html,body{height:100%;margin:0;}
-    body{
-      background:var(--bg);
-      color:var(--fg);
-      font-family: Arial, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-      height:200vh; /* keeps scroll behavior you wanted */
-      overflow-x:hidden;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      justify-content:flex-start;
-      text-align:center;
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 40px;
+      background-color: #f5f5dc;
+      min-height: 100vh;
     }
 
-    /* header / nav */
-    .next-button{
-      position:fixed;
-      top:20px;
-      right:30px;
-      color:var(--fg);
-      text-decoration:none;
-      font-weight:700;
-      font-size:18px;
-      z-index:100;
-    }
-    .next-button:hover{opacity:.8}
-
-    .container{
-      margin-top:40px;
-      z-index:2;
-      display:flex;
-      flex-direction:column;
-      align-items:center;
-      gap:10px;
-    }
-    h1{font-size:50px;margin:0;color:var(--fg)}
-    p.lead{font-size:20px;margin:0;color:#ddd}
-
-    /* main fixed image (smile) */
-    #smile{
-      position:fixed;
-      top:55%;
-      left:50%;
-      transform:translate(-50%,-50%) scale(1);
-      width:40%;
-      max-width:1200px;
-      height:auto;
-      transition:transform .1s linear;
-      z-index:1;
+    .back-button {
+      position: fixed;
+      top: 20px;
+      left: 20px;
+      text-decoration: none;
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+      z-index: 100;
     }
 
-    .scroll-hint{
-      position:fixed;
-      bottom:30px;
-      left:50%;
-      transform:translateX(-50%);
-      font-size:18px;
-      color:#fff;
-      z-index:30;
-      transition:opacity .3s linear;
+    .back-button:hover {
+      opacity: 0.7;
     }
 
-    /* Click to uncover text */
-    .click-uncover{
-      position:fixed;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      font-size:50px;
-      font-weight:700;
-      color:var(--fg);
-      cursor:pointer;
-      opacity:0;
-      pointer-events:none;
-      z-index:35;
-      transition:opacity .45s ease;
-      text-shadow: 0 2px 8px rgba(0,0,0,.6);
-      user-select:none;
-    }
-    .click-uncover.show{
-      opacity:1;
-      pointer-events:auto;
-    }
-    .click-uncover:hover{opacity:.85}
-
-    /* falling teeth */
-    .tooth{
-      position:fixed;
-      top:-200px;
-      height:auto;
-      opacity:1; /* full opacity always */
-      z-index:25;
-      pointer-events:none;
-      animation-name:fall;
-      animation-timing-function:linear;
-      animation-fill-mode:forwards;
-    }
-    @keyframes fall{
-      from{transform:translateY(-200px)}
-      to{transform:translateY(120vh)}
+    .exam-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 60px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
     }
 
-    /* fade-to-black overlay */
-    .fade-black{
-      position:fixed;
-      inset:0;
-      background:#000;
-      opacity:0;
-      pointer-events:none;
-      z-index:60;
-      transition:opacity .9s ease;
-    }
-    .fade-black.show{
-      opacity:1;
-      pointer-events:auto;
+    .exam-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 50px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #000;
     }
 
-    /* tooth interpretation panel (irregular shape, no flex) */
-    .tooth-panel{
-      position:fixed;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%) scale(.98);
-      width:var(--panel-size-vw);
-      height:var(--panel-size-vw);
-      max-width:80vmin;
-      max-height:80vmin;
-      background-image: url('tooth2.png'); 
-      background-repeat:no-repeat;
-      background-position:center;
-      background-size: contain;
-      opacity:0;
-      z-index:70;
-      transition:opacity .6s ease, transform .45s ease;
-      pointer-events:none;
-    }
-    .tooth-panel.show{
-      opacity:1;
-      transform:translate(-50%,-50%) scale(1);
-      pointer-events:auto;
+    .exam-title, .exam-time {
+      font-weight: bold;
+      font-size: 14px;
     }
 
-    /* text inside tooth, absolutely positioned for irregular shape */
-    .tooth-text{
-      position:absolute;
-      top:28%;       
-      left:50%;
-      transform:translateX(-50%);
-      width:45%;
-      max-width:70%;
-      color:#000; 
-      text-align:center;
-      font-weight:600;
-      font-size:16px;
-      line-height:1.35;
-      user-select:none;
-    }
-    .tooth-text .headline{
-      font-size:20px;
-      font-weight:700;
-      margin-bottom:6px;
-    }
-    .tooth-text .sub{
-      font-size:14px;
-      font-weight:500;
-      color:#111;
+    .question {
+      margin-bottom: 40px;
     }
 
-    /* final poetic text style */
-    .poetic{
-      font-style:italic;
-      font-weight:600;
-      font-size:20px;
-      color:#111;
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 16px;
     }
 
-    /* responsive adjustments */
-    @media (max-width:600px){
-      h1{font-size:34px}
-      .click-uncover{font-size:28px}
-      .tooth-text{font-size:16px;width:78%}
-      .tooth-panel{width:86vmin;height:86vmin}
+    .options {
+      margin-left: 20px;
+    }
+
+    .option {
+      margin-bottom: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      display: block;
+    }
+
+    .option input[type="radio"] {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .option label {
+      cursor: pointer;
+    }
+
+    .red-x {
+      color: red;
+      font-size: 30px;
+      font-weight: bold;
+      margin-left: 20px;
+      display: inline-block;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .failed-popup {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 40px 60px;
+      border: 5px solid red;
+      font-size: 48px;
+      font-weight: bold;
+      color: red;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      animation: popIn 0.3s ease-out;
+      text-align: center;
+    }
+
+    .question-box {
+      position: fixed;
+      top: 60%;
+      left: 0;
+      right: 0;
+      margin: 0 auto;
+      width: fit-content;
+      background: white;
+      padding: 15px 30px;
+      border: 3px solid #000;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      animation: popIn 0.3s ease-out 0.2s;
+      animation-fill-mode: both;
+      text-align: center;
+    }
+
+    .question-box p {
+      font-size: 16px;
+      color: #000;
+      margin: 0 0 15px 0;
+      font-weight: normal;
+      font-family: 'Courier New', monospace;
+    }
+
+    .question-box button {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: 2px solid #000;
+      background: white;
+      font-family: 'Courier New', monospace;
+    }
+
+    .question-box button:hover {
+      background: #f0f0f0;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 999;
     }
   </style>
 </head>
 <body>
+  <a href="Dream-2.html" class="back-button">← Previous</a>
+  
+  <div class="exam-container">
+    <div class="exam-header">
+      <div class="exam-title">FINAL EXAM</div>
+      <div class="exam-time">2hrs 10 mins</div>
+    </div>
 
-  <a href="Dream-2" class="next-button">Next →</a>
+    <div class="question">
+      <div class="question-text">1. Have you ever had a dream about failing an exam?</div>
+      <div class="options">
+        <div class="option">
+          <input type="radio" id="q1a" name="q1" value="yes">
+          <label for="q1a">a) yes</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q1b" name="q1" value="no">
+          <label for="q1b">b) no</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q1c" name="q1" value="maybe">
+          <label for="q1c">c) maybe</label>
+        </div>
+      </div>
+    </div>
 
-  <div class="container">
-    <h1>Why Do We Dream About Teeth Falling Out?</h1>
-    <p class="lead">It isn’t just random, it’s symbolic.</p>
+    <div class="question">
+      <div class="question-text">2. Have you ever wondered what it means?</div>
+      <div class="options">
+        <div class="option">
+          <input type="radio" id="q2a" name="q2" value="yes">
+          <label for="q2a">a) yes</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q2b" name="q2" value="no">
+          <label for="q2b">b) no</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q2c" name="q2" value="maybe">
+          <label for="q2c">c) maybe</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">3. Can you guess the meanings?</div>
+      <div class="options">
+        <div class="option">
+          <input type="radio" id="q3a" name="q3" value="yes">
+          <label for="q3a">a) yes</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q3b" name="q3" value="no">
+          <label for="q3b">b) no</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q3c" name="q3" value="maybe">
+          <label for="q3c">c) maybe</label>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <img id="smile" src="smile2.png" alt="Cartoon smile">
-
-  <div class="scroll-hint" id="scrollHint">Scroll down ↓</div>
-
-  <div class="click-uncover" id="clickUncover">Click to uncover</div>
-
-  <!-- overlays and panel -->
-  <div class="fade-black" id="fadeBlack"></div>
-
-  <div class="tooth-panel" id="toothPanel" role="button" aria-pressed="false" tabindex="0">
-    <div class="tooth-text" id="toothText"></div>
-  </div>
-
-<script>
-/* ---------- references ---------- */
-const smile = document.getElementById('smile');
-const clickUncover = document.getElementById('clickUncover');
-const scrollHint = document.getElementById('scrollHint');
-const fadeBlack = document.getElementById('fadeBlack');
-const toothPanel = document.getElementById('toothPanel');
-const toothText = document.getElementById('toothText');
-
-/* ---------- interpretation content ---------- */
-const interpretations = [
-  { title: "Recent loss or grief", body: "Dreams of teeth falling can reflect recent experiences of loss or grief,your mind processing absence and adjustment." },
-  { title: "Jealousy", body: "These dreams may signal envy or concern about someone else’s advantages, a subconscious worry about comparison." },
-  { title: "Lack of control", body: "A sense of losing control, decisions, circumstances, or direction feel uncertain." },
-  { title: "Insecurity or shame", body: "They can point to personal insecurities or shame around appearance, performance, or social standing." },
-  { title: "Health-related fears", body: "Sometimes they surface during concerns about health, bodily vulnerability or fear of decline." },
-  { title: "Big life changes", body: "Finally, such dreams often appear around major transitions like career, relationships, or identity shifts." }
-];
-
-/* final poetic line */
-const finalPoetic = "The dream ends, but the echoes remain.";
-
-/* ---------- scroll behavior ---------- */
-window.addEventListener('scroll', () => {
-  const scrollY = window.scrollY;
-  const windowHeight = window.innerHeight;
-  const docH = document.body.scrollHeight;
-
-  const scale = 1 + scrollY / 800;
-  smile.style.transform = `translate(-50%,-50%) scale(${scale})`;
-
-  if (scrollY + windowHeight >= docH - 50) {
-    clickUncover.classList.add('show');
-    scrollHint.style.opacity = 0;
-  } else {
-    clickUncover.classList.remove('show');
-    scrollHint.style.opacity = 1;
-  }
-});
-
-/* ---------- tooth rain logic ---------- */
-let rainStarted = false;
-clickUncover.addEventListener('click', () => {
-  if (rainStarted) return;
-  rainStarted = true;
-  clickUncover.classList.remove('show');
-
-  const spawnDuration = 3000;
-  const start = Date.now();
-  const spawnInterval = setInterval(() => {
-    if (Date.now() - start > spawnDuration) {
-      clearInterval(spawnInterval);
-      setTimeout(() => fadeThenShowPanel(), 500);
-      return;
-    }
-    for (let i=0;i<4;i++) spawnTooth();
-  }, 100);
-});
-
-function spawnTooth(){
-  const img = document.createElement('img');
-  img.src = 'tooth2.png';
-  img.className = 'tooth';
-  img.style.left = (Math.random() * 100) + 'vw';
-  const size = 80 + Math.random() * 100;
-  img.style.width = size + 'px';
-  img.style.top = '-' + (150 + Math.random() * 250) + 'px';
-  img.style.animationDuration = (1 + Math.random()*2) + 's';
-  document.body.appendChild(img);
-  setTimeout(()=> {
-    if (img && img.parentNode) img.parentNode.removeChild(img);
-  }, 3000 + 600);
-}
-
-/* ---------- fade to black then show panel ---------- */
-function fadeThenShowPanel(){
-  fadeBlack.classList.add('show');
-  setTimeout(()=> showToothPanel(), 800);
-}
-
-/* ---------- interpretation panel ---------- */
-let idx = 0;
-function showToothPanel(){
-  toothPanel.classList.add('show');
-  idx = 0;
-  renderInterpretation(idx);
-}
-
-function renderInterpretation(i){
-  if (i < interpretations.length){
-    const it = interpretations[i];
-    toothText.innerHTML = `<div class="headline">${escapeHtml(it.title)}</div><div class="sub">${escapeHtml(it.body)}</div>`;
-    toothPanel.setAttribute('aria-pressed','false');
-  } else {
-    toothText.innerHTML = `<div class="headline">That’s all</div><div class="sub poetic">${escapeHtml(finalPoetic)}</div>`;
-    toothPanel.setAttribute('aria-pressed','true');
-  }
-}
-
-toothPanel.addEventListener('click', () => {
-  idx++;
-  if (idx <= interpretations.length) renderInterpretation(idx);
-});
-
-
-function escapeHtml(s){
-  return String(s).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-}
-</script>
+  <script>
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    const answeredQuestions = new Set();
+    
+    radioButtons.forEach(radio => {
+      radio.addEventListener('change', function() {
+        // Remove any existing X from this question's options
+        const questionDiv = this.closest('.question');
+        const existingX = questionDiv.querySelector('.red-x');
+        if (existingX) {
+          existingX.remove();
+        }
+        
+        // Add red X next to the selected option
+        const optionDiv = this.closest('.option');
+        const redX = document.createElement('span');
+        redX.className = 'red-x';
+        redX.textContent = '✗';
+        optionDiv.appendChild(redX);
+        
+        // Track which question was answered
+        answeredQuestions.add(this.name);
+        
+        console.log('Answered questions:', answeredQuestions.size);
+        
+        // Check if all 3 questions are answered
+        if (answeredQuestions.size === 3) {
+          setTimeout(() => {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            
+            // Create failed popup
+            const popup = document.createElement('div');
+            popup.className = 'failed-popup';
+            popup.textContent = 'YOU FAILED';
+            
+            // Create question box
+            const questionBox = document.createElement('div');
+            questionBox.className = 'question-box';
+            questionBox.innerHTML = `
+              <p>Do you want to see the interpretations?</p>
+              <button id="yesBtn">YES</button>
+              <button id="noBtn">NO</button>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            document.body.appendChild(questionBox);
+            
+            // Add button listeners
+            document.getElementById('yesBtn').addEventListener('click', () => {
+              // TODO: Show interpretations
+              alert('Show interpretations here!');
+            });
+            
+            document.getElementById('noBtn').addEventListener('click', () => {
+              overlay.remove();
+              popup.remove();
+              questionBox.remove();
+            });
+          }, 500);
+        }
+      });
+    });
+  </script>
 </body>
 </html>
