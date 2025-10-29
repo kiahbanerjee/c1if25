@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dreams of Failing an Exam?</title>
+  <style>
+    body {
+      font-family: 'Courier New', monospace;
+      margin: 0;
+      padding: 40px;
+      background-color: #f5f5dc;
+      min-height: 100vh;
+    }
+
+    .exam-container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      padding: 60px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .exam-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 50px;
+      padding-bottom: 20px;
+      border-bottom: 2px solid #000;
+    }
+
+    .exam-title, .exam-time {
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .question {
+      margin-bottom: 40px;
+    }
+
+    .question-text {
+      font-weight: bold;
+      margin-bottom: 15px;
+      font-size: 16px;
+    }
+
+    .options {
+      margin-left: 20px;
+    }
+
+    .option {
+      margin-bottom: 10px;
+      font-size: 15px;
+      cursor: pointer;
+      display: block;
+    }
+
+    .option input[type="radio"] {
+      margin-right: 10px;
+      cursor: pointer;
+    }
+
+    .option label {
+      cursor: pointer;
+    }
+
+    .red-x {
+      color: red;
+      font-size: 30px;
+      font-weight: bold;
+      margin-left: 20px;
+      display: inline-block;
+      animation: popIn 0.3s ease-out;
+    }
+
+    @keyframes popIn {
+      0% {
+        transform: scale(0);
+      }
+      50% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+      }
+    }
+
+    .failed-popup {
+      position: fixed;
+      top: 40%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 40px 60px;
+      border: 5px solid red;
+      font-size: 48px;
+      font-weight: bold;
+      color: red;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      animation: popIn 0.3s ease-out;
+      text-align: center;
+    }
+
+    .question-box {
+      position: fixed;
+      top: 60%;
+      left: 50%;
+      transform: translate(-50%, 0);
+      background: white;
+      padding: 15px 30px;
+      border: 3px solid #000;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      animation: popIn 0.3s ease-out 0.2s;
+      animation-fill-mode: both;
+      text-align: center;
+    }
+
+    .question-box p {
+      font-size: 16px;
+      color: #000;
+      margin: 0 0 15px 0;
+      font-weight: normal;
+      font-family: 'Courier New', monospace;
+    }
+
+    .question-box button {
+      font-size: 14px;
+      font-weight: bold;
+      padding: 8px 20px;
+      margin: 5px;
+      cursor: pointer;
+      border: 2px solid #000;
+      background: white;
+      font-family: 'Courier New', monospace;
+    }
+
+    .question-box button:hover {
+      background: #f0f0f0;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.7);
+      z-index: 999;
+    }
+  </style>
+</head>
+<body>
+  <div class="exam-container">
+    <div class="exam-header">
+      <div class="exam-title">FINAL EXAM</div>
+      <div class="exam-time">2hrs 10 mins</div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">1. Have you ever had a dream about failing an exam?</div>
+      <div class="options">
+        <div class="option">
+          <input type="radio" id="q1a" name="q1" value="yes">
+          <label for="q1a">a) yes</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q1b" name="q1" value="no">
+          <label for="q1b">b) no</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q1c" name="q1" value="maybe">
+          <label for="q1c">c) maybe</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">2. Have you ever wondered what it means?</div>
+      <div class="options">
+        <div class="option">
+          <input type="radio" id="q2a" name="q2" value="yes">
+          <label for="q2a">a) yes</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q2b" name="q2" value="no">
+          <label for="q2b">b) no</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q2c" name="q2" value="maybe">
+          <label for="q2c">c) maybe</label>
+        </div>
+      </div>
+    </div>
+
+    <div class="question">
+      <div class="question-text">3. Can you guess the meanings?</div>
+      <div class="options">
+        <div class="option">
+          <input type="radio" id="q3a" name="q3" value="yes">
+          <label for="q3a">a) yes</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q3b" name="q3" value="no">
+          <label for="q3b">b) no</label>
+        </div>
+        <div class="option">
+          <input type="radio" id="q3c" name="q3" value="maybe">
+          <label for="q3c">c) maybe</label>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const radioButtons = document.querySelectorAll('input[type="radio"]');
+    const answeredQuestions = new Set();
+    
+    radioButtons.forEach(radio => {
+      radio.addEventListener('change', function() {
+        // Remove any existing X from this question's options
+        const questionDiv = this.closest('.question');
+        const existingX = questionDiv.querySelector('.red-x');
+        if (existingX) {
+          existingX.remove();
+        }
+        
+        // Add red X next to the selected option
+        const optionDiv = this.closest('.option');
+        const redX = document.createElement('span');
+        redX.className = 'red-x';
+        redX.textContent = '✗';
+        optionDiv.appendChild(redX);
+        
+        // Track which question was answered
+        answeredQuestions.add(this.name);
+        
+        console.log('Answered questions:', answeredQuestions.size);
+        
+        // Check if all 3 questions are answered
+        if (answeredQuestions.size === 3) {
+          setTimeout(() => {
+            // Create overlay
+            const overlay = document.createElement('div');
+            overlay.className = 'overlay';
+            
+            // Create failed popup
+            const popup = document.createElement('div');
+            popup.className = 'failed-popup';
+            popup.textContent = 'YOU FAILED';
+            
+            // Create question box
+            const questionBox = document.createElement('div');
+            questionBox.className = 'question-box';
+            questionBox.innerHTML = `
+              <p>Do you want to see the interpretations?</p>
+              <button id="yesBtn">YES</button>
+              <button id="noBtn">NO</button>
+            `;
+            
+            document.body.appendChild(overlay);
+            document.body.appendChild(popup);
+            document.body.appendChild(questionBox);
+            
+            // Add button listeners
+            document.getElementById('yesBtn').addEventListener('click', () => {
+              // TODO: Show interpretations
+              alert('Show interpretations here!');
+            });
+            
+            document.getElementById('noBtn').addEventListener('click', () => {
+              overlay.remove();
+              popup.remove();
+              questionBox.remove();
+            });
+          }, 500);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
