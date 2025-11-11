@@ -367,6 +367,37 @@
       margin: 0;
     }
 
+    .completion-nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: space-between;
+      padding: 20px 20px;
+      box-sizing: border-box;
+      z-index: 2001;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.8s ease;
+    }
+
+    .completion-nav.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .completion-nav a {
+      text-decoration: none;
+      color: #000;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .completion-nav a:hover {
+      opacity: 0.7;
+    }
+
     @media (max-width: 700px) {
       .book-container {
         width: 90vw;
@@ -464,6 +495,11 @@
   <div class="completion-screen" id="completionScreen">
     <h2>Yay, you passed!</h2>
     <p>Move on to the next dream</p>
+  </div>
+
+  <div class="completion-nav" id="completionNav">
+    <a href="Dream-2.html">← Previous</a>
+    <a href="Dream-3.html">Next →</a>
   </div>
 
   <div class="interpretation-box" id="interpretationBox">
@@ -601,6 +637,7 @@
         document.getElementById('interpretationBox').classList.remove('show');
         setTimeout(() => {
           document.getElementById('completionScreen').classList.add('show');
+          document.getElementById('completionNav').classList.add('show');
         }, 500);
       }
     });
