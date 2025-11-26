@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Why Do We Dream About Teeth Falling Out?</title>
   <style>
-    /* basic page */
+    
     :root{
       --bg:#000;
       --fg:#fff;
@@ -16,7 +16,7 @@
       background:var(--bg);
       color:var(--fg);
       font-family: Arial, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
-      height:200vh; /* keeps scroll behavior you wanted */
+      height:200vh; 
       overflow-x:hidden;
       display:flex;
       flex-direction:column;
@@ -25,7 +25,7 @@
       text-align:center;
     }
 
-    /* header / nav */
+    
     .next-button{
       position:fixed;
       top:20px;
@@ -49,7 +49,7 @@
     h1{font-size:50px;margin:0;color:var(--fg)}
     p.lead{font-size:20px;margin:0;color:#ddd}
 
-    /* main fixed image (smile) */
+    
     #smile{
       position:fixed;
       top:55%;
@@ -73,7 +73,7 @@
       transition:opacity .3s linear;
     }
 
-    /* Click to uncover text */
+    
     .click-uncover{
       position:fixed;
       top:50%;
@@ -96,12 +96,12 @@
     }
     .click-uncover:hover{opacity:.85}
 
-    /* falling teeth */
+    
     .tooth{
       position:fixed;
       top:-200px;
       height:auto;
-      opacity:1; /* full opacity always */
+      opacity:1; 
       z-index:25;
       pointer-events:none;
       animation-name:fall;
@@ -113,7 +113,7 @@
       to{transform:translateY(120vh)}
     }
 
-    /* fade-to-black overlay */
+    
     .fade-black{
       position:fixed;
       inset:0;
@@ -128,7 +128,7 @@
       pointer-events:auto;
     }
 
-    /* tooth interpretation panel (irregular shape, no flex) */
+    
     .tooth-panel{
       position:fixed;
       top:50%;
@@ -153,7 +153,7 @@
       pointer-events:auto;
     }
 
-    /* text inside tooth, absolutely positioned for irregular shape */
+  
     .tooth-text{
       position:absolute;
       top:28%;       
@@ -179,7 +179,7 @@
       color:#111;
     }
 
-    /* final poetic text style */
+  
     .poetic{
       font-style:italic;
       font-weight:600;
@@ -187,7 +187,7 @@
       color:#111;
     }
 
-    /* responsive adjustments */
+ 
     @media (max-width:600px){
       h1{font-size:34px}
       .click-uncover{font-size:28px}
@@ -211,7 +211,7 @@
 
   <div class="click-uncover" id="clickUncover">Click to uncover</div>
 
-  <!-- overlays and panel -->
+
   <div class="fade-black" id="fadeBlack"></div>
 
   <div class="tooth-panel" id="toothPanel" role="button" aria-pressed="false" tabindex="0">
@@ -219,7 +219,7 @@
   </div>
 
 <script>
-/* ---------- references ---------- */
+
 const smile = document.getElementById('smile');
 const clickUncover = document.getElementById('clickUncover');
 const scrollHint = document.getElementById('scrollHint');
@@ -227,7 +227,7 @@ const fadeBlack = document.getElementById('fadeBlack');
 const toothPanel = document.getElementById('toothPanel');
 const toothText = document.getElementById('toothText');
 
-/* ---------- interpretation content ---------- */
+
 const interpretations = [
   { title: "Recent loss or grief", body: "Dreams of teeth falling can reflect recent experiences of loss or grief,your mind processing absence and adjustment." },
   { title: "Jealousy", body: "These dreams may signal envy or concern about someone else’s advantages, a subconscious worry about comparison." },
@@ -237,10 +237,10 @@ const interpretations = [
   { title: "Big life changes", body: "Finally, such dreams often appear around major transitions like career, relationships, or identity shifts." }
 ];
 
-/* final poetic line */
+
 const finalPoetic = "The dream ends, but the echoes remain.";
 
-/* ---------- scroll behavior ---------- */
+
 window.addEventListener('scroll', () => {
   const scrollY = window.scrollY;
   const windowHeight = window.innerHeight;
@@ -258,7 +258,7 @@ window.addEventListener('scroll', () => {
   }
 });
 
-/* ---------- tooth rain logic ---------- */
+
 let rainStarted = false;
 clickUncover.addEventListener('click', () => {
   if (rainStarted) return;
@@ -292,13 +292,13 @@ function spawnTooth(){
   }, 3000 + 600);
 }
 
-/* ---------- fade to black then show panel ---------- */
+
 function fadeThenShowPanel(){
   fadeBlack.classList.add('show');
   setTimeout(()=> showToothPanel(), 800);
 }
 
-/* ---------- interpretation panel ---------- */
+
 let idx = 0;
 function showToothPanel(){
   toothPanel.classList.add('show');

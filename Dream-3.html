@@ -132,6 +132,38 @@
       text-align: center;
     }
 
+    .wrong-popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 40px 60px;
+      border: 5px solid red;
+      font-size: 48px;
+      font-weight: bold;
+      color: red;
+      z-index: 1000;
+      box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+      animation: popIn 0.3s ease-out;
+      text-align: center;
+    }
+
+    .wrong-popup button {
+      margin-top: 20px;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 10px 30px;
+      cursor: pointer;
+      border: 2px solid #000;
+      background: white;
+      font-family: 'Courier New', monospace;
+    }
+
+    .wrong-popup button:hover {
+      background: #f0f0f0;
+    }
+
     .question-box {
       position: fixed;
       top: 60%;
@@ -241,97 +273,6 @@
       z-index: 999;
     }
 
-    .book-container {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      perspective: 2000px;
-      width: 600px;
-      height: 800px;
-      z-index: 1001;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-
-    .book-container.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .page-stack {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-    }
-
-    .page {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: #f5f5dc;
-      border: 2px solid #8b7355;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 48px;
-      font-weight: bold;
-      color: #000;
-      cursor: pointer;
-      transform-origin: left center;
-      transition: transform 0.8s ease;
-      backface-visibility: hidden;
-    }
-
-    .page.turning {
-      animation: pageTurn 0.8s ease forwards;
-    }
-
-    .page.turned {
-      transform: rotateY(-180deg);
-      pointer-events: none;
-    }
-
-    @keyframes pageTurn {
-      0% {
-        transform: rotateY(0deg);
-      }
-      100% {
-        transform: rotateY(-180deg);
-      }
-    }
-
-    .page:nth-child(1) { z-index: 5; }
-    .page:nth-child(2) { z-index: 4; transform: translateX(5px); }
-    .page:nth-child(3) { z-index: 3; transform: translateX(10px); }
-    .page:nth-child(4) { z-index: 2; transform: translateX(15px); }
-    .page:nth-child(5) { z-index: 1; transform: translateX(20px); }
-
-    .page.turning,
-    .page.turned {
-      transform: rotateY(-180deg);
-    }
-
-    .instruction-text {
-      position: fixed;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      color: #fff;
-      font-size: 18px;
-      text-align: center;
-      z-index: 1002;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.3s ease;
-    }
-
-    .instruction-text.show {
-      opacity: 1;
-    }
-
     .completion-screen {
       position: fixed;
       top: 0;
@@ -397,27 +338,11 @@
     .completion-nav a:hover {
       opacity: 0.7;
     }
-
-    @media (max-width: 700px) {
-      .book-container {
-        width: 90vw;
-        height: 70vh;
-      }
-      .page {
-        font-size: 32px;
-      }
-      .completion-screen h2 {
-        font-size: 40px;
-      }
-      .completion-screen p {
-        font-size: 20px;
-      }
-    }
   </style>
 </head>
 <body>
   <a href="Dream-2.html" class="back-button">← Previous</a>
-  <a href="#" class="next-button">Next →</a>
+  <a href="Dream-4.html" class="next-button">Next →</a>
   
   <div class="exam-container">
     <div class="exam-header">
@@ -480,18 +405,6 @@
     </div>
   </div>
 
-  <div class="book-container" id="bookContainer">
-    <div class="page-stack">
-      <div class="page" data-page="1">Interpretation 1</div>
-      <div class="page" data-page="2">Interpretation 2</div>
-      <div class="page" data-page="3">Interpretation 3</div>
-      <div class="page" data-page="4">Interpretation 4</div>
-      <div class="page" data-page="5">Interpretation 5</div>
-    </div>
-  </div>
-
-  <div class="instruction-text" id="instructionText">Click the page to turn</div>
-
   <div class="completion-screen" id="completionScreen">
     <h2>Yay, you passed!</h2>
     <p>Move on to the next dream</p>
@@ -499,7 +412,7 @@
 
   <div class="completion-nav" id="completionNav">
     <a href="Dream-2.html">← Previous</a>
-    <a href="Dream-3.html">Next →</a>
+    <a href="Dream-4.html">Next →</a>
   </div>
 
   <div class="interpretation-box" id="interpretationBox">
@@ -513,6 +426,8 @@
   <script>
     const radioButtons = document.querySelectorAll('input[type="radio"]');
     const answeredQuestions = new Set();
+    
+    let overlay, popup, questionBox;
     
     // Interpretations data
     const interpretations = [
@@ -559,53 +474,71 @@
         // Track which question was answered
         answeredQuestions.add(this.name);
         
-        console.log('Answered questions:', answeredQuestions.size);
-        
         // Check if all 3 questions are answered
         if (answeredQuestions.size === 3) {
           setTimeout(() => {
-            // Create overlay
-            const overlay = document.createElement('div');
-            overlay.className = 'overlay';
-            
-            // Create failed popup
-            const popup = document.createElement('div');
-            popup.className = 'failed-popup';
-            popup.textContent = 'YOU FAILED';
-            
-            // Create question box
-            const questionBox = document.createElement('div');
-            questionBox.className = 'question-box';
-            questionBox.innerHTML = `
-              <p>Do you want to see the interpretations?</p>
-              <button id="yesBtn">YES</button>
-              <button id="noBtn">NO</button>
-            `;
-            
-            document.body.appendChild(overlay);
-            document.body.appendChild(popup);
-            document.body.appendChild(questionBox);
-            
-            // Add button listeners
-            document.getElementById('yesBtn').addEventListener('click', () => {
-              // Hide popup and question box
-              popup.remove();
-              questionBox.remove();
-              
-              // Show interpretation box
-              currentInterpIndex = 0;
-              showInterpretation();
-            });
-            
-            document.getElementById('noBtn').addEventListener('click', () => {
-              overlay.remove();
-              popup.remove();
-              questionBox.remove();
-            });
+            showQuestionPopup();
           }, 500);
         }
       });
     });
+
+    function showQuestionPopup() {
+      // Create overlay
+      overlay = document.createElement('div');
+      overlay.className = 'overlay';
+      
+      // Create failed popup
+      popup = document.createElement('div');
+      popup.className = 'failed-popup';
+      popup.textContent = 'YOU FAILED';
+      
+      // Create question box
+      questionBox = document.createElement('div');
+      questionBox.className = 'question-box';
+      questionBox.innerHTML = `
+        <p>Do you want to see the interpretations?</p>
+        <button id="yesBtn">YES</button>
+        <button id="noBtn">NO</button>
+      `;
+      
+      document.body.appendChild(overlay);
+      document.body.appendChild(popup);
+      document.body.appendChild(questionBox);
+      
+      // Add button listeners
+      document.getElementById('yesBtn').addEventListener('click', () => {
+        // Hide popup and question box
+        popup.remove();
+        questionBox.remove();
+        
+        // Show interpretation box
+        currentInterpIndex = 0;
+        showInterpretation();
+      });
+      
+      document.getElementById('noBtn').addEventListener('click', () => {
+        // Hide question box and failed popup
+        popup.remove();
+        questionBox.remove();
+        
+        // Show WRONG popup
+        const wrongPopup = document.createElement('div');
+        wrongPopup.className = 'wrong-popup';
+        wrongPopup.innerHTML = `
+          WRONG
+          <br>
+          <button id="tryAgainBtn">TRY AGAIN</button>
+        `;
+        
+        document.body.appendChild(wrongPopup);
+        
+        document.getElementById('tryAgainBtn').addEventListener('click', () => {
+          wrongPopup.remove();
+          showQuestionPopup();
+        });
+      });
+    }
 
     // Interpretation navigation
     function showInterpretation() {
@@ -633,43 +566,16 @@
       if (currentInterpIndex < interpretations.length) {
         showInterpretation();
       } else {
-        // Hide interpretation box and show completion
+        // Hide interpretation box and overlay, show completion
         document.getElementById('interpretationBox').classList.remove('show');
+        if (overlay && overlay.parentNode) {
+          overlay.remove();
+        }
         setTimeout(() => {
           document.getElementById('completionScreen').classList.add('show');
           document.getElementById('completionNav').classList.add('show');
         }, 500);
       }
-    });
-
-    // Page turning logic (kept for potential future use)
-    const pages = document.querySelectorAll('.page');
-    let currentPage = 0;
-
-    pages.forEach((page, index) => {
-      page.addEventListener('click', () => {
-        if (index === currentPage && !page.classList.contains('turned')) {
-          page.classList.add('turning');
-          
-          setTimeout(() => {
-            page.classList.remove('turning');
-            page.classList.add('turned');
-            currentPage++;
-            
-            // Hide instruction after first turn
-            if (currentPage === 1) {
-              document.getElementById('instructionText').style.opacity = '0';
-            }
-            
-            // Show completion screen after last page
-            if (currentPage === pages.length) {
-              setTimeout(() => {
-                document.getElementById('completionScreen').classList.add('show');
-              }, 1000);
-            }
-          }, 800);
-        }
-      });
     });
   </script>
 </body>
