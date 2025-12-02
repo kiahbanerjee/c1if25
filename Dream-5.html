@@ -14,7 +14,7 @@
     }
 
     body {
-      background: #0a0a0a;
+      background: #ff0000;
       min-height: 100vh;
       font-family: 'Bebas Neue', sans-serif;
       overflow: hidden;
@@ -29,7 +29,7 @@
       position: fixed;
       top: 30px;
       text-decoration: none;
-      color: #ff4444;
+      color: #000000;
       font-size: 24px;
       z-index: 100;
       transition: opacity 0.3s ease;
@@ -59,7 +59,7 @@
 
     .instruction {
       font-size: 36px;
-      color: #ff4444;
+      color: #000000;
       font-weight: 400;
       margin-bottom: 50px;
       text-align: center;
@@ -77,7 +77,7 @@
     .clock {
       width: 100%;
       height: 100%;
-      border: 4px solid #ff4444;
+      border: 4px solid #000000;
       border-radius: 50%;
       position: relative;
       background: #1a1a1a;
@@ -88,7 +88,7 @@
       position: absolute;
       border: 2px solid rgba(255, 68, 68, 0.2);
       border-radius: 50%;
-      background: rgba(26, 26, 26, 0.5);
+      background: rgba(255, 0, 0, 0.5);
     }
 
     .bg-clock .hand {
@@ -99,7 +99,7 @@
       position: absolute;
       width: 16px;
       height: 16px;
-      background: #ff4444;
+      background: #000000;
       border-radius: 50%;
       top: 50%;
       left: 50%;
@@ -112,7 +112,7 @@
       bottom: 50%;
       left: 50%;
       transform-origin: bottom center;
-      background: #ff4444;
+      background: #000000;
       cursor: pointer;
       transition: none;
     }
@@ -129,7 +129,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 48px;
-      color: #ff4444;
+      color: #000000;
       font-weight: 400;
       opacity: 0;
       pointer-events: none;
@@ -148,7 +148,7 @@
       left: 0;
       width: 100%;
       height: 100vh;
-      background: #0a0a0a;
+      background: #ef0303;
       z-index: 1000;
       display: none;
       cursor: pointer;
@@ -168,7 +168,7 @@
       left: 50%;
       transform: translate(-50%, -50%);
       font-size: 36px;
-      color: #ff4444;
+      color: #000000;
       font-weight: 400;
       text-align: center;
       opacity: 0;
@@ -196,7 +196,7 @@
 
     .interpretation h3 {
       font-size: 24px;
-      color: #ff4444;
+      color: #00000009;
       margin-bottom: 10px;
       font-weight: 400;
     }
@@ -276,7 +276,7 @@
         clock.appendChild(center);
         bgClocks.appendChild(clock);
 
-        // Animate background clock
+      
         let bgAngle = Math.random() * 360;
         const bgSpeed = Math.random() * 3 + 2;
         setInterval(() => {
