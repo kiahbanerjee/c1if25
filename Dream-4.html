@@ -594,16 +594,14 @@
           const dx = targetX - snake.x;
           const dy = targetY - snake.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
-          
-          // Only move if not too close (maintain some distance)
+         
           const minDistance = 200 * snake.distancePreference;
           if (distance > minDistance) {
             // Move toward target with individual speed
             snake.x += dx * snake.followSpeed;
             snake.y += dy * snake.followSpeed;
           }
-          
-          // Update position while maintaining rotation
+        
           snake.element.style.left = snake.x + 'px';
           snake.element.style.top = snake.y + 'px';
         });

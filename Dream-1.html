@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Why Do We Dream About Teeth Falling Out?</title>
+  <style>
+    
+    :root{
+      --bg:#000;
+      --fg:#fff;
+      --panel-size-vw:110vmin;
+    }
+    html,body{height:100%;margin:0;}
+    body{
+      background:var(--bg);
+      color:var(--fg);
+      font-family: Arial, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+      height:200vh; 
+      overflow-x:hidden;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:flex-start;
+      text-align:center;
+    }
+
+    
+    .next-button{
+      position:fixed;
+      top:20px;
+      right:30px;
+      color:var(--fg);
+      text-decoration:none;
+      font-weight:700;
+      font-size:18px;
+      z-index:100;
+    }
+    .next-button:hover{opacity:.8}
+
+    .container{
+      margin-top:40px;
+      z-index:2;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:10px;
+    }
+    h1{font-size:50px;margin:0;color:var(--fg)}
+    p.lead{font-size:20px;margin:0;color:#ddd}
+
+    
+    #smile{
+      position:fixed;
+      top:55%;
+      left:50%;
+      transform:translate(-50%,-50%) scale(1);
+      width:40%;
+      max-width:1200px;
+      height:auto;
+      transition:transform .1s linear;
+      z-index:1;
+    }
+
+    .scroll-hint{
+      position:fixed;
+      bottom:30px;
+      left:50%;
+      transform:translateX(-50%);
+      font-size:18px;
+      color:#fff;
+      z-index:30;
+      transition:opacity .3s linear;
+    }
+
+    
+    .click-uncover{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%);
+      font-size:50px;
+      font-weight:700;
+      color:var(--fg);
+      cursor:pointer;
+      opacity:0;
+      pointer-events:none;
+      z-index:35;
+      transition:opacity .45s ease;
+      text-shadow: 0 2px 8px rgba(0,0,0,.6);
+      user-select:none;
+    }
+    .click-uncover.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+    .click-uncover:hover{opacity:.85}
+
+    
+    .tooth{
+      position:fixed;
+      top:-200px;
+      height:auto;
+      opacity:1; 
+      z-index:25;
+      pointer-events:none;
+      animation-name:fall;
+      animation-timing-function:linear;
+      animation-fill-mode:forwards;
+    }
+    @keyframes fall{
+      from{transform:translateY(-200px)}
+      to{transform:translateY(120vh)}
+    }
+
+    
+    .fade-black{
+      position:fixed;
+      inset:0;
+      background:#000;
+      opacity:0;
+      pointer-events:none;
+      z-index:60;
+      transition:opacity .9s ease;
+    }
+    .fade-black.show{
+      opacity:1;
+      pointer-events:auto;
+    }
+
+    
+    .tooth-panel{
+      position:fixed;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%) scale(.98);
+      width:var(--panel-size-vw);
+      height:var(--panel-size-vw);
+      max-width:80vmin;
+      max-height:80vmin;
+      background-image: url('tooth2.png'); 
+      background-repeat:no-repeat;
+      background-position:center;
+      background-size: contain;
+      opacity:0;
+      z-index:70;
+      transition:opacity .6s ease, transform .45s ease;
+      pointer-events:none;
+    }
+    .tooth-panel.show{
+      opacity:1;
+      transform:translate(-50%,-50%) scale(1);
+      pointer-events:auto;
+    }
+
+  
+    .tooth-text{
+      position:absolute;
+      top:28%;       
+      left:50%;
+      transform:translateX(-50%);
+      width:45%;
+      max-width:70%;
+      color:#000; 
+      text-align:center;
+      font-weight:600;
+      font-size:16px;
+      line-height:1.35;
+      user-select:none;
+    }
+    .tooth-text .headline{
+      font-size:20px;
+      font-weight:700;
+      margin-bottom:6px;
+    }
+    .tooth-text .sub{
+      font-size:14px;
+      font-weight:500;
+      color:#111;
+    }
+
+  
+    .poetic{
+      font-style:italic;
+      font-weight:600;
+      font-size:20px;
+      color:#111;
+    }
+
+ 
+    @media (max-width:600px){
+      h1{font-size:34px}
+      .click-uncover{font-size:28px}
+      .tooth-text{font-size:16px;width:78%}
+      .tooth-panel{width:86vmin;height:86vmin}
+    }
+  </style>
+</head>
+<body>
+
+  <a href="Dream-2" class="next-button">Next →</a>
+
+  <div class="container">
+    <h1>Why Do We Dream About Teeth Falling Out?</h1>
+    <p class="lead">It isn’t just random, it’s symbolic.</p>
+  </div>
+
+  <img id="smile" src="smile2.png" alt="Cartoon smile">
+
+  <div class="scroll-hint" id="scrollHint">Scroll down ↓</div>
+
+  <div class="click-uncover" id="clickUncover">Click to uncover</div>
+
+
+  <div class="fade-black" id="fadeBlack"></div>
+
+  <div class="tooth-panel" id="toothPanel" role="button" aria-pressed="false" tabindex="0">
+    <div class="tooth-text" id="toothText"></div>
+  </div>
+
+<script>
+
+const smile = document.getElementById('smile');
+const clickUncover = document.getElementById('clickUncover');
+const scrollHint = document.getElementById('scrollHint');
+const fadeBlack = document.getElementById('fadeBlack');
+const toothPanel = document.getElementById('toothPanel');
+const toothText = document.getElementById('toothText');
+
+
+const interpretations = [
+  { title: "Recent loss or grief", body: "Dreams of teeth falling can reflect recent experiences of loss or grief,your mind processing absence and adjustment." },
+  { title: "Jealousy", body: "These dreams may signal envy or concern about someone else’s advantages, a subconscious worry about comparison." },
+  { title: "Lack of control", body: "A sense of losing control, decisions, circumstances, or direction feel uncertain." },
+  { title: "Insecurity or shame", body: "They can point to personal insecurities or shame around appearance, performance, or social standing." },
+  { title: "Health-related fears", body: "Sometimes they surface during concerns about health, bodily vulnerability or fear of decline." },
+  { title: "Big life changes", body: "Finally, such dreams often appear around major transitions like career, relationships, or identity shifts." }
+];
+
+
+const finalPoetic = "The dream ends, but the echoes remain.";
+
+
+window.addEventListener('scroll', () => {
+  const scrollY = window.scrollY;
+  const windowHeight = window.innerHeight;
+  const docH = document.body.scrollHeight;
+
+  const scale = 1 + scrollY / 800;
+  smile.style.transform = `translate(-50%,-50%) scale(${scale})`;
+
+  if (scrollY + windowHeight >= docH - 50) {
+    clickUncover.classList.add('show');
+    scrollHint.style.opacity = 0;
+  } else {
+    clickUncover.classList.remove('show');
+    scrollHint.style.opacity = 1;
+  }
+});
+
+
+let rainStarted = false;
+clickUncover.addEventListener('click', () => {
+  if (rainStarted) return;
+  rainStarted = true;
+  clickUncover.classList.remove('show');
+
+  const spawnDuration = 3000;
+  const start = Date.now();
+  const spawnInterval = setInterval(() => {
+    if (Date.now() - start > spawnDuration) {
+      clearInterval(spawnInterval);
+      setTimeout(() => fadeThenShowPanel(), 500);
+      return;
+    }
+    for (let i=0;i<4;i++) spawnTooth();
+  }, 100);
+});
+
+function spawnTooth(){
+  const img = document.createElement('img');
+  img.src = 'tooth2.png';
+  img.className = 'tooth';
+  img.style.left = (Math.random() * 100) + 'vw';
+  const size = 80 + Math.random() * 100;
+  img.style.width = size + 'px';
+  img.style.top = '-' + (150 + Math.random() * 250) + 'px';
+  img.style.animationDuration = (1 + Math.random()*2) + 's';
+  document.body.appendChild(img);
+  setTimeout(()=> {
+    if (img && img.parentNode) img.parentNode.removeChild(img);
+  }, 3000 + 600);
+}
+
+
+function fadeThenShowPanel(){
+  fadeBlack.classList.add('show');
+  setTimeout(()=> showToothPanel(), 800);
+}
+
+
+let idx = 0;
+function showToothPanel(){
+  toothPanel.classList.add('show');
+  idx = 0;
+  renderInterpretation(idx);
+}
+
+function renderInterpretation(i){
+  if (i < interpretations.length){
+    const it = interpretations[i];
+    toothText.innerHTML = `<div class="headline">${escapeHtml(it.title)}</div><div class="sub">${escapeHtml(it.body)}</div>`;
+    toothPanel.setAttribute('aria-pressed','false');
+  } else {
+    toothText.innerHTML = `<div class="headline">That’s all</div><div class="sub poetic">${escapeHtml(finalPoetic)}</div>`;
+    toothPanel.setAttribute('aria-pressed','true');
+  }
+}
+
+toothPanel.addEventListener('click', () => {
+  idx++;
+  if (idx <= interpretations.length) renderInterpretation(idx);
+});
+
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, (m) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+}
+</script>
+</body>
+</html>

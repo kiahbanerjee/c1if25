@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dreams of Being Late</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #0a0a0a;
+      min-height: 100vh;
+      font-family: 'Bebas Neue', sans-serif;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    .nav-button {
+      position: fixed;
+      top: 30px;
+      text-decoration: none;
+      color: #ff4444;
+      font-size: 24px;
+      z-index: 100;
+      transition: opacity 0.3s ease;
+    }
+
+    .nav-button:hover {
+      opacity: 0.7;
+    }
+
+    .prev-button {
+      left: 30px;
+    }
+
+    .next-button {
+      right: 30px;
+    }
+
+    .background-clocks {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .instruction {
+      font-size: 36px;
+      color: #ff4444;
+      font-weight: 400;
+      margin-bottom: 50px;
+      text-align: center;
+      z-index: 10;
+      position: relative;
+    }
+
+    .clock-container {
+      position: relative;
+      width: 300px;
+      height: 300px;
+      z-index: 10;
+    }
+
+    .clock {
+      width: 100%;
+      height: 100%;
+      border: 4px solid #ff4444;
+      border-radius: 50%;
+      position: relative;
+      background: #1a1a1a;
+      box-shadow: 0 0 30px rgba(255, 68, 68, 0.3);
+    }
+
+    .bg-clock {
+      position: absolute;
+      border: 2px solid rgba(255, 68, 68, 0.2);
+      border-radius: 50%;
+      background: rgba(26, 26, 26, 0.5);
+    }
+
+    .bg-clock .hand {
+      background: rgba(255, 68, 68, 0.3);
+    }
+
+    .clock-center {
+      position: absolute;
+      width: 16px;
+      height: 16px;
+      background: #ff4444;
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+
+    .hand {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform-origin: bottom center;
+      background: #ff4444;
+      cursor: pointer;
+      transition: none;
+    }
+
+    .minute-hand {
+      width: 4px;
+      height: 120px;
+      margin-left: -2px;
+    }
+
+    .too-late {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      color: #ff4444;
+      font-weight: 400;
+      opacity: 0;
+      pointer-events: none;
+      animation: fadeInOut 0.8s ease;
+      z-index: 100;
+    }
+
+    @keyframes fadeInOut {
+      0%, 100% { opacity: 0; }
+      50% { opacity: 1; }
+    }
+
+    .interpretation-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: #0a0a0a;
+      z-index: 1000;
+      display: none;
+      cursor: pointer;
+    }
+
+    .interpretation-screen.show {
+      display: block;
+    }
+
+    .interpretation-screen .nav-button {
+      z-index: 1100;
+    }
+
+    .intro-text {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 36px;
+      color: #ff4444;
+      font-weight: 400;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 2s ease forwards;
+    }
+
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+
+    .interpretation {
+      position: fixed;
+      max-width: 500px;
+      padding: 30px;
+      border: none;
+      background: transparent;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+      outline: none;
+    }
+
+    .interpretation.visible {
+      opacity: 1;
+    }
+
+    .interpretation h3 {
+      font-size: 24px;
+      color: #ff4444;
+      margin-bottom: 10px;
+      font-weight: 400;
+    }
+
+    .interpretation p {
+      font-size: 16px;
+      color: #fff;
+      line-height: 1.6;
+      font-weight: 400;
+    }
+  </style>
+</head>
+<body>
+  <a href="Dream-4.html" class="nav-button prev-button">← Previous</a>
+  <a href="Dream-6.html" class="nav-button next-button">Next →</a>
+
+  <div class="background-clocks" id="bgClocks"></div>
+
+  <div class="instruction" id="instruction">Catch the time</div>
+  
+  <div class="clock-container">
+    <div class="clock">
+      <div class="hand minute-hand" id="minuteHand"></div>
+      <div class="clock-center"></div>
+    </div>
+  </div>
+
+  <div class="interpretation-screen" id="interpretationScreen">
+    <a href="Dream-4.html" class="nav-button prev-button">← Previous</a>
+    <a href="Dream-6.html" class="nav-button next-button">Next →</a>
+    <div class="intro-text" id="introText">This is why we dream of being late...</div>
+  </div>
+
+  <script>
+    const minuteHand = document.getElementById('minuteHand');
+    const instruction = document.getElementById('instruction');
+    const interpretationScreen = document.getElementById('interpretationScreen');
+    const introText = document.getElementById('introText');
+    const bgClocks = document.getElementById('bgClocks');
+
+    let angle = 0;
+    let speed = 5; // degrees per frame
+    let evading = true;
+    const startTime = Date.now();
+
+    // Create background clocks
+    function createBackgroundClocks() {
+      const sizes = [80, 120, 100, 150, 90, 130, 110];
+      const positions = [
+        { top: '10%', left: '10%' },
+        { top: '15%', right: '15%' },
+        { top: '60%', left: '5%' },
+        { top: '70%', right: '10%' },
+        { top: '30%', left: '80%' },
+        { top: '80%', left: '40%' },
+        { top: '40%', right: '5%' }
+      ];
+
+      positions.forEach((pos, i) => {
+        const clock = document.createElement('div');
+        clock.className = 'bg-clock';
+        clock.style.width = sizes[i] + 'px';
+        clock.style.height = sizes[i] + 'px';
+        Object.assign(clock.style, pos);
+
+        const hand = document.createElement('div');
+        hand.className = 'hand minute-hand';
+        hand.style.height = (sizes[i] * 0.4) + 'px';
+        
+        const center = document.createElement('div');
+        center.className = 'clock-center';
+        center.style.width = '8px';
+        center.style.height = '8px';
+        center.style.background = 'rgba(255, 68, 68, 0.3)';
+
+        clock.appendChild(hand);
+        clock.appendChild(center);
+        bgClocks.appendChild(clock);
+
+        // Animate background clock
+        let bgAngle = Math.random() * 360;
+        const bgSpeed = Math.random() * 3 + 2;
+        setInterval(() => {
+          bgAngle += bgSpeed;
+          if (bgAngle >= 360) bgAngle = 0;
+          hand.style.transform = `rotate(${bgAngle}deg)`;
+        }, 50);
+      });
+    }
+
+    createBackgroundClocks();
+
+    const interpretations = [
+      {
+        title: "1. Fear of Missing Opportunities",
+        text: "You might worry about missing chances in real life — jobs, relationships, deadlines, or personal goals."
+      },
+      {
+        title: "2. Feeling Unprepared",
+        text: "The dream can reflect anxiety about not being ready for something important, whether emotionally, mentally, or practically."
+      },
+      {
+        title: "3. Pressure and Overwhelm",
+        text: "It often appears when you're juggling too many responsibilities and feel you're falling behind."
+      },
+      {
+        title: "4. Perfectionism",
+        text: "Being late in a dream can symbolize the fear of not doing things \"perfectly\" or not doing them fast enough."
+      },
+      {
+        title: "5. Lack of Control",
+        text: "It may point to a sense that time is moving too fast or that your life direction feels unpredictable."
+      },
+      {
+        title: "6. Resistance to Change",
+        text: "Dreams of being late can happen when you're avoiding or delaying a decision or transition in your waking life."
+      },
+      {
+        title: "7. Self-Expectation vs Reality",
+        text: "It might reflect tension between who you think you should be and where you actually are right now."
+      }
+    ];
+
+    // Animate clock hand
+    function animate() {
+      angle += speed;
+      if (angle >= 360) angle = 0;
+      
+      minuteHand.style.transform = `rotate(${angle}deg)`;
+      
+      
+      const elapsed = Date.now() - startTime;
+      if (elapsed > 5000 && evading) {
+        evading = false;
+        startInterpretations();
+        return;
+      }
+      
+      if (evading) {
+        requestAnimationFrame(animate);
+      }
+    }
+    animate();
+
+    // Mouse tracking
+    let mouseX = 0;
+    let mouseY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      if (evading) {
+        const handRect = minuteHand.getBoundingClientRect();
+        const handCenterX = handRect.left + handRect.width / 2;
+        const handCenterY = handRect.top + handRect.height / 2;
+        
+        const distance = Math.sqrt(
+          Math.pow(mouseX - handCenterX, 2) + 
+          Math.pow(mouseY - handCenterY, 2)
+        );
+        
+        // Speed up when mouse gets close
+        if (distance < 100) {
+          speed = 15;
+        } else {
+          speed = 5;
+        }
+      }
+    });
+
+    // Click detection
+    minuteHand.addEventListener('click', () => {
+      if (evading) {
+        showTooLate();
+      }
+    });
+
+    function showTooLate() {
+      const tooLate = document.createElement('div');
+      tooLate.className = 'too-late';
+      tooLate.textContent = 'Too late!';
+      document.body.appendChild(tooLate);
+      
+      setTimeout(() => tooLate.remove(), 800);
+    }
+
+    // Start showing interpretations
+    function startInterpretations() {
+      instruction.style.display = 'none';
+      document.querySelector('.clock-container').style.display = 'none';
+      document.getElementById('bgClocks').style.display = 'none';
+      interpretationScreen.classList.add('show');
+      
+      // Show intro text first
+      setTimeout(() => {
+        introText.style.display = 'none';
+        setupClickInterpretations();
+      }, 3000);
+    }
+
+    let currentInterpIndex = 0;
+    let currentInterpEl = null;
+
+    function setupClickInterpretations() {
+      interpretationScreen.addEventListener('click', showNextInterpretation);
+      showNextInterpretation();
+    }
+
+    function showNextInterpretation() {
+      // Remove previous interpretation
+      if (currentInterpEl) {
+        currentInterpEl.remove();
+      }
+
+      if (currentInterpIndex >= interpretations.length) {
+        return; // All interpretations shown
+      }
+
+      const interp = interpretations[currentInterpIndex];
+      
+      // Create interpretation element
+      currentInterpEl = document.createElement('div');
+      currentInterpEl.className = 'interpretation';
+      currentInterpEl.style.border = 'none';
+      currentInterpEl.style.background = 'transparent';
+      currentInterpEl.innerHTML = `
+        <h3>${interp.title}</h3>
+        <p>${interp.text}</p>
+      `;
+      
+      // Random position
+      const x = Math.random() * (window.innerWidth - 550) + 25;
+      const y = Math.random() * (window.innerHeight - 250) + 100;
+      currentInterpEl.style.left = x + 'px';
+      currentInterpEl.style.top = y + 'px';
+      
+      interpretationScreen.appendChild(currentInterpEl);
+      
+      // Fade in
+      setTimeout(() => currentInterpEl.classList.add('visible'), 50);
+      
+      currentInterpIndex++;
+    }
+  </script>
+</body>
+</html>
