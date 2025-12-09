@@ -11,11 +11,12 @@
     }
 
     body {
-      height: 100vh;
+      height: 100vh;  
       width: 100vw;
       overflow: hidden;
       font-family: Georgia, "Times New Roman", serif;
-      background: url("index bg.jpeg") center center / cover no-repeat fixed;
+      background: url("background.png") center center no-repeat;
+      background-size: 130%;  
       display: flex;
       align-items: center;
       justify-content: center;
@@ -41,20 +42,19 @@
       text-shadow: 0 0 12px rgba(255, 255, 255, 0.75);
     }
 
-    /* ARROW BUTTON */
     .arrow-button {
       position: relative;
-      display: none;          /* hidden at first */
+      display: none;
       align-items: center;
       justify-content: center;
       width: 240px;
       height: 70px;
-      background: black;
+      background: rgb(92, 69, 145);
       color: white;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.2em;
-      font-size: 3.5ch;      
+      font-size: 3.5ch;
       border: none;
       border-radius: 0;
       cursor: pointer;
@@ -81,7 +81,7 @@
       DO YOU EVER WONDER WHY WE DREAM WHAT WE DREAM?
     </div>
 
-    <a href="map.html" class="arrow-button" id="goButton">
+    <a href="Dream-1.html" class="arrow-button" id="goButton">
       GO
     </a>
   </div>
@@ -96,7 +96,7 @@
 
       if (!clicked) {
         text.textContent = "LET'S FIND OUT";
-        goButton.style.display = "inline-flex";  
+        goButton.style.display = "inline-flex";
         clicked = true;
       }
     });

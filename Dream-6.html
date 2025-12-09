@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Time to Feast</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Monsieur+La+Doulaise&family=Playfair+Display:ital,wght@0,300;0,400;0,500&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #000;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .top-title {
+      width: 100%;
+      text-align: center;
+      padding-top: 2rem;
+      color: white;
+      font-family: "Monsieur La Doulaise", cursive;
+      font-size: 6rem;
+      line-height: 1;
+      z-index: 2;
+    }
+
+    .subtitle {
+      width: 100%;
+      text-align: center;
+      margin-top: 0.5rem;
+      color: #f5f5f5;
+      font-family: "Playfair Display", serif;
+      font-weight: 300;
+      font-size: 1.1rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .food-layer {
+      position: relative;
+      width: 100%;
+      height: 260px;
+      margin-top: 2rem;
+      z-index: 2;
+    }
+
+    .food-img {
+      position: absolute;
+      height: 200px;
+      width: auto;
+      cursor: pointer;
+    }
+
+    .pizza   { left: 22%; top: 130px; }
+    .ramen   { left: 37%; top: 125px; }
+    .taco    { left: 48%; top: 130px; }
+    .icecream{ left: 62%; top: 90px;  }
+    .cookie  { left: 70%; top: 140px; }
+
+    .bottom-wrapper {
+      flex: 1;
+      width: 100%;
+    }
+
+    .table-image {
+      position: fixed;
+      left: 50%;
+      bottom: -80vh;
+      transform: translateX(-50%);
+      width: 85vw;
+      height: auto;
+      z-index: 1;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .modal {
+      background: #111;
+      border: 1px solid #555;
+      padding: 2rem 2.5rem;
+      max-width: 420px;
+      width: 90vw;
+      color: #f5f5f5;
+      font-family: "Playfair Display", serif;
+      text-align: center;
+    }
+
+    .modal-title {
+      font-size: 1.6rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .modal-text {
+      font-size: 0.95rem;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .modal-button {
+      padding: 0.6rem 1.8rem;
+      border: none;
+      background: #f5f5f5;
+      color: #000;
+      font-family: "Playfair Display", serif;
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      cursor: pointer;
+    }
+
+    /* PREVIOUS / NEXT CORNER BUTTONS */
+    .nav-arrow {
+      position: fixed;
+      top: 1.2rem;
+      padding: 0.4rem 0.9rem;
+      color: #f5f5f5;
+      border: 1px solid #f5f5f5;
+      text-decoration: none;
+      font-family: "Playfair Display", serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      z-index: 20;
+    }
+
+    .nav-prev {
+      left: 1.5rem;
+    }
+
+    .nav-next {
+      right: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+  <!-- corner navigation -->
+  <a href="Dream-5.html" class="nav-arrow nav-prev">
+    &#8592; Previous
+  </a>
+
+  <a href="Dream-7.html" class="nav-arrow nav-next">
+    Next &#8594;
+  </a>
+
+  <div class="top-title">
+    Time to Feast
+  </div>
+
+  <div class="subtitle">
+    click on the meals to know why we dream of food.
+  </div>
+
+  <div class="food-layer">
+    <img src="pizza.png" alt="Pizza" class="food-img pizza" data-food="Pizza">
+    <img src="ramen.png" alt="Ramen" class="food-img ramen" data-food="Ramen">
+    <img src="taco.png" alt="Taco" class="food-img taco" data-food="Taco">
+    <img src="ice cream.png" alt="Ice cream" class="food-img icecream" data-food="Ice cream">
+    <img src="cookie.png" alt="Cookie" class="food-img cookie" data-food="Cookie">
+  </div>
+
+  <div class="bottom-wrapper">
+    <img src="table.png" alt="Dining table" class="table-image">
+  </div>
+
+  <audio id="biteSound" src="bite.mp3" preload="auto"></audio>
+
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-text" id="modalText"></div>
+      <button class="modal-button" id="modalClose">Done</button>
+    </div>
+  </div>
+
+  <script>
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle   = document.getElementById('modalTitle');
+    const modalText    = document.getElementById('modalText');
+    const modalClose   = document.getElementById('modalClose');
+    const biteSound    = document.getElementById('biteSound');
+
+    const messages = {
+      'Pizza': {
+        heading: 'Desire or craving (not always literal)',
+        text: 'Dreams about food often represent wanting something — comfort, affection, excitement, or fulfillment — not just physical hunger.'
+      },
+      'Ramen': {
+        heading: 'Emotional nourishment',
+        text: 'Food can symbolize the need for emotional support, attention, or care. What you are “hungry for” emotionally shows up as food.'
+      },
+      'Taco': {
+        heading: 'Abundance vs. lack',
+        text: 'Eating a lot or seeing overflowing food can relate to feeling abundant, secure, or satisfied. Scarce or missing food can echo feeling deprived, stressed, or drained.'
+      },
+      'Ice cream': {
+        heading: 'Decision making',
+        text: 'Different foods can represent choices or paths in life. Picking food can mirror making decisions, and being unable to choose can reflect feeling indecisive.'
+      },
+      'Cookie': {
+        heading: 'Desire or craving (not always literal)',
+        text: 'Dreams about food often represent wanting something — comfort, affection, excitement, or fulfillment — not just physical hunger.'
+      }
+    };
+
+    document.querySelectorAll('.food-img').forEach(img => {
+      img.addEventListener('click', () => {
+        const foodName = img.dataset.food || 'Food';
+        const data = messages[foodName];
+
+        if (data) {
+          modalTitle.textContent = data.heading;
+          modalText.textContent  = data.text;
+        } else {
+          modalTitle.textContent = '';
+          modalText.textContent  = '';
+        }
+
+        biteSound.currentTime = 0;
+        biteSound.play();
+
+        modalOverlay.style.display = 'flex';
+      });
+    });
+
+    modalClose.addEventListener('click', () => {
+      modalOverlay.style.display = 'none';
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.style.display = 'none';
+      }
+    });
+  </script>
+</body>
+</html>
