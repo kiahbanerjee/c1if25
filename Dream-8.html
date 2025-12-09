@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dreams of Drowning</title>
+
+  <!-- Fugaz One font -->
+  <link href="https://fonts.googleapis.com/css2?family=Fugaz+One&display=swap" rel="stylesheet">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #020a14; /* navy */
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      color: #f5f5f5;
+      position: relative;
+    }
+
+    /* corner navigation in Fugaz One */
+    .nav-arrow {
+      position: fixed;
+      top: 1.2rem;
+      font-family: "Fugaz One", system-ui, sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: #f5f5f5;
+      text-decoration: none;
+      z-index: 4;
+    }
+
+    .nav-prev { left: 1.5rem; }
+    .nav-next { right: 1.5rem; }
+
+    /* fixed title in Fugaz One */
+    .fixed-title {
+      position: fixed;
+      top: 1.4rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-family: "Fugaz One", system-ui, sans-serif;
+      font-size: 2.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: #f5f5f5;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* instruction just under the fixed title */
+    .fixed-subtitle {
+      position: fixed;
+      top: 4.6rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.9rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      opacity: 0.8;
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1; /* below water */
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .title {
+      display: none; /* no longer used in center */
+    }
+
+    .interp {
+      max-width: 800px;
+      font-size: 1.3rem;
+      line-height: 1.7;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+      white-space: pre-line;
+    }
+
+    .interp.visible {
+      opacity: 1;
+    }
+
+    .subtitle {
+      display: none; /* moved to fixed-subtitle at top */
+    }
+
+    .next-wrap {
+      position: absolute;
+      bottom: 10rem;        /* slightly higher than before */
+      display: flex;
+      justify-content: center;
+      width: 100%;
+    }
+
+    .next-btn {
+      padding: 0.7rem 1.6rem;
+      background: transparent;
+      border: 1px solid #f5f5f5;
+      color: #f5f5f5;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.9rem;
+      cursor: pointer;
+    }
+
+    .next-btn:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    /* water layer with squiggly top */
+    .water {
+      position: fixed;
+      left: -10vw;
+      bottom: 0;
+      width: 120vw;
+      height: 50vh; /* base height controlled by JS */
+      background: linear-gradient(to top, #347bad, #031a2b);
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, 0.45);
+      z-index: 2; /* above content, below fixed title */
+      cursor: grab;
+      animation: rise 1s linear infinite;
+      /* wavy top using clip-path polygon */
+      clip-path: polygon(
+        0% 30%,
+        10% 27%,
+        20% 32%,
+        30% 26%,
+        40% 31%,
+        50% 25%,
+        60% 33%,
+        70% 27%,
+        80% 31%,
+        90% 26%,
+        100% 30%,
+        100% 100%,
+        0% 100%
+      );
+    }
+
+    .water.grabbing {
+      cursor: grabbing;
+    }
+
+    /* constantly rising by moving upward, not changing height */
+    @keyframes rise {
+      0%   { transform: translateX(0) translateY(0); }
+      25%  { transform: translateX(10px) translateY(-10px); }
+      50%  { transform: translateX(-10px) translateY(-25px); }
+      75%  { transform: translateX(5px) translateY(-40px); }
+      100% { transform: translateX(0) translateY(-60px); }
+    }
+  </style>
+</head>
+<body>
+  <!-- corner nav -->
+  <a href="Dream-7.html" class="nav-arrow nav-prev">← Previous</a>
+  <a href="End.html" class="nav-arrow nav-next">Next →</a>
+
+  <div class="fixed-title">DREAMS OF DROWNING</div>
+  <div class="fixed-subtitle">
+    Keep pushing the water down to keep the meaning in sight.
+  </div>
+
+  <div class="content">
+    <div class="title" id="mainTitle">DREAMS OF DROWNING</div>
+    <div class="interp" id="interpText"></div>
+
+    <!-- old subtitle left for JS structure but hidden via CSS -->
+    <div class="subtitle">
+      Keep pushing the water down to keep the meaning in sight.
+    </div>
+
+    <div class="next-wrap">
+      <button id="nextBtn" class="next-btn" disabled>Next Interpretation →</button>
+    </div>
+  </div>
+
+  <div class="water" id="water"></div>
+
+  <script>
+    const water = document.getElementById('water');
+    const mainTitle = document.getElementById('mainTitle');
+    const interpText = document.getElementById('interpText');
+    const nextBtn = document.getElementById('nextBtn');
+
+    // interpretations to step through
+    const interps = [
+      "Overwhelmed by emotions:\nDrowning often reflects feeling consumed by stress, sadness, anxiety, or responsibilities that feel “too much to handle.”",
+      "Lack of control:\nIt can symbolize situations where you feel powerless, unable to keep up, or struggling to stay “above water” in daily life.",
+      "Repressed feelings surfacing:\nThe water represents emotions you’ve been holding back. Drowning means those feelings are rising and demanding attention.",
+      "Fear of failure or collapse:\nIt may show a fear that everything you’re balancing could fall apart — like you’re sinking under expectations or pressure."
+    ];
+
+    let interpIndex = -1;
+
+    // initial sequence: fade out center title, then first interpretation
+    setTimeout(() => {
+      mainTitle.style.opacity = 0;
+      setTimeout(() => {
+        showNextInterp(); // first
+        nextBtn.disabled = false;
+      }, 800);
+    }, 2000);
+
+    function showNextInterp() {
+      interpText.classList.remove('visible');
+      setTimeout(() => {
+        interpIndex = (interpIndex + 1) % interps.length;
+        interpText.textContent = interps[interpIndex];
+        interpText.classList.add('visible');
+      }, 400);
+    }
+
+    nextBtn.addEventListener('click', () => {
+      if (nextBtn.disabled) return;
+      showNextInterp();
+    });
+
+    // WATER INTERACTION: user can push water level down by dragging
+    let isDragging = false;
+    let startY = 0;
+    let startHvh = 50; // starting guess in vh
+
+    function pxToVh(px) {
+      return (px / window.innerHeight) * 100;
+    }
+
+    function syncHeightFromComputed() {
+      const pxH = parseFloat(getComputedStyle(water).height);
+      startHvh = pxToVh(pxH);
+    }
+
+    water.addEventListener('mousedown', (e) => {
+      isDragging = true;
+      water.classList.add('grabbing');
+      startY = e.clientY;
+      syncHeightFromComputed();
+    });
+
+    window.addEventListener('mousemove', (e) => {
+      if (!isDragging) return;
+      const dy = e.clientY - startY; // positive when dragging down
+      let newH = startHvh - pxToVh(dy); // drag down -> lower water
+      newH = Math.max(5, Math.min(95, newH));
+      water.style.height = newH + 'vh';
+    });
+
+    window.addEventListener('mouseup', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      water.classList.remove('grabbing');
+    });
+
+    // touch support
+    water.addEventListener('touchstart', (e) => {
+      isDragging = true;
+      water.classList.add('grabbing');
+      startY = e.touches[0].clientY;
+      syncHeightFromComputed();
+    });
+
+    window.addEventListener('touchmove', (e) => {
+      if (!isDragging) return;
+      const dy = e.touches[0].clientY - startY;
+      let newH = startHvh - pxToVh(dy);
+      newH = Math.max(5, Math.min(95, newH));
+      water.style.height = newH + 'vh';
+    });
+
+    window.addEventListener('touchend', () => {
+      if (!isDragging) return;
+      isDragging = false;
+      water.classList.remove('grabbing');
+    });
+  </script>
+</body>
+</html>

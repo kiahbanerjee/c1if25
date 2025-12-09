@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Dream Messages</title>
+<style>
+* {
+box-sizing: border-box;
+margin: 0;
+padding: 0;
+}
+
+body {
+height: 100vh;
+width: 100vw;
+background: #b7ddff; /* sky blue */
+display: flex;
+align-items: center;
+justify-content: center;
+font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+overflow: hidden;
+}
+
+/* corner navigation */
+.nav-arrow {
+  position: fixed;
+  top: 1.2rem;
+  color: #00223e;
+  text-decoration: none;
+  font: inherit;
+  font-size: 0.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  z-index: 20;
+}
+
+.nav-prev { left: 1.5rem; }
+.nav-next { right: 1.5rem; }
+
+.wrapper {
+width: 95vw;
+max-width: 1300px;
+display: flex;
+align-items: center;
+gap: 4rem;
+}
+
+/* phone on the left */
+.phone-frame {
+flex: 0 0 auto;
+position: relative;
+}
+
+.phone-frame img {
+display: block;
+height: 800px;
+width: auto;
+}
+
+.phone-header {
+position: absolute;
+top: 17%;
+left: 50%;
+transform: translateX(-50%);
+font-size: 18px;
+font-weight: 600;
+color: #000;
+pointer-events: none;
+}
+
+/* chat over the phone */
+.chat-screen {
+position: absolute;
+inset: 22% 26% 18% 26%; /* narrower than before to bring bubbles closer */
+border-radius: 18px;
+padding: 6px;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+gap: 8px;
+pointer-events: none;
+}
+
+.messages {
+flex: 1;
+display: flex;
+flex-direction: column;
+justify-content: flex-end;
+gap: 6px;
+font-size: 15px;
+}
+
+.bubble {
+max-width: 70%;
+padding: 8px 12px;
+border-radius: 16px;
+line-height: 1.4;
+word-wrap: break-word;
+pointer-events: auto;
+}
+
+.bubble.user {
+align-self: flex-end;
+background: #2c7cff;
+color: #fff;
+border-bottom-right-radius: 3px;
+}
+
+.bubble.other {
+align-self: flex-start;
+background: rgba(230, 230, 230, 0.85);
+color: #000;
+border-bottom-left-radius: 3px;
+}
+
+.seen {
+font-size: 11px;
+color: #222;
+align-self: flex-end;
+margin-top: 2px;
+}
+
+.typing {
+display: inline-flex;
+align-items: center;
+gap: 4px;
+}
+
+.typing-dot {
+width: 5px;
+height: 5px;
+border-radius: 50%;
+background: #555;
+animation: blink 1.2s infinite ease-in-out;
+}
+
+.typing-dot:nth-child(2) {
+animation-delay: 0.25s;
+}
+
+.typing-dot:nth-child(3) {
+animation-delay: 0.5s;
+}
+
+@keyframes blink {
+0%, 100% { opacity: 0.2; transform: translateY(0); }
+50% { opacity: 1; transform: translateY(-2px); }
+}
+
+.side-panel {
+flex: 1;
+display: flex;
+flex-direction: column;
+justify-content: center;
+margin-top: 600px;
+}
+
+/* simple heading text, left-aligned */
+.ignored-text {
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: #00223e;
+  margin-bottom: 0.7rem;
+}
+
+.input-row {
+display: flex;
+align-items: center;
+gap: 0.7rem;
+background: #ffffff;
+border-radius: 999px;
+padding: 0.7rem 1.2rem;
+box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+}
+
+#userInput {
+border: none;
+outline: none;
+flex: 1;
+font-size: 1rem;
+background: transparent;
+}
+
+.hint {
+margin-top: 0.5rem;
+font-size: 0.9rem;
+color: #20517f;
+}
+
+@media (max-width: 900px) {
+.wrapper {
+flex-direction: column;
+}
+}
+</style>
+</head>
+<body>
+<!-- corner nav -->
+<a href="Dream-6.html" class="nav-arrow nav-prev">
+  ← Previous
+</a>
+<a href="Dream-8.html" class="nav-arrow nav-next">
+  Next →
+</a>
+
+<div class="wrapper">
+<!-- Phone on the left -->
+<div class="phone-frame">
+<img src="phone.png" alt="Phone" />
+<div class="phone-header">Kiah B</div>
+<div class="chat-screen">
+<div class="messages" id="messages">
+<!-- messages get injected here -->
+</div>
+</div>
+</div>
+
+<!-- Input on the right -->
+<div class="side-panel">
+  <div class="ignored-text" id="ignoredText">DREAMS OF BEING IGNORED?</div>
+
+  <div class="input-row">
+    <input
+      id="userInput"
+      type="text"
+      placeholder="Type your dream message..."
+      autocomplete="off"
+    />
+  </div>
+  <div class="hint">Press Enter to send.</div>
+</div>
+</div>
+
+<script>
+const input = document.getElementById('userInput');
+const messagesEl = document.getElementById('messages');
+const ignoredTextEl = document.getElementById('ignoredText');
+let hasChangedHeading = false;
+
+// replies for "why?"
+const otherMessages = [
+  "Feeling Overlooked in Real Life\nYou may feel like your opinions, needs, or emotions aren’t being acknowledged by people around you.",
+  "Fear of Rejection\nThe dream can reflect anxiety about not being accepted, appreciated, or wanted—socially or romantically.",
+  "Low Self-Worth\nIt might signal a worry that you aren’t “important enough” or that others don’t value your presence."
+];
+
+function createBubble(text, role) {
+  const div = document.createElement('div');
+  div.className = 'bubble ' + role;
+  div.textContent = text;
+  return div;
+}
+
+function createTypingBubble() {
+  const bubble = document.createElement('div');
+  bubble.className = 'bubble other';
+  const typing = document.createElement('div');
+  typing.className = 'typing';
+  for (let i = 0; i < 3; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'typing-dot';
+    typing.appendChild(dot);
+  }
+  bubble.appendChild(typing);
+  return bubble;
+}
+
+function createSeen() {
+  const span = document.createElement('div');
+  span.className = 'seen';
+  span.textContent = 'seen';
+  return span;
+}
+
+// helper to add one “other side” message after a delay
+function addOtherMessage(text, delayMs) {
+  setTimeout(() => {
+    const otherBubble = createBubble(text, 'other');
+    messagesEl.appendChild(otherBubble);
+  }, delayMs);
+}
+
+input.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+
+    const userBubble = createBubble(text, 'user');
+    messagesEl.appendChild(userBubble);
+
+    const typingBubble = createTypingBubble();
+    messagesEl.appendChild(typingBubble);
+
+    setTimeout(() => {
+      messagesEl.removeChild(typingBubble);
+      const seen = createSeen();
+      messagesEl.appendChild(seen);
+    }, 2500);
+
+    // after the very first sent message, change heading
+    if (!hasChangedHeading) {
+      ignoredTextEl.textContent = "MAYBE LET'S ASK WHY?";
+      hasChangedHeading = true;
+    }
+
+    // if user types exactly "why?" (any case), send 3 replies
+    if (text.toLowerCase() === 'why?') {
+      addOtherMessage(otherMessages[0], 3000);
+      addOtherMessage(otherMessages[1], 6000);
+      addOtherMessage(otherMessages[2], 9000);
+    }
+  }
+});
+</script>
+</body>
+</html>
