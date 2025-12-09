@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>End</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      height: 100%;
+      width: 100%;
+    }
+
+    body {
+      background: #000 url('end bg.jpeg') center center no-repeat;
+      background-size: cover;
+      font-family: Georgia, "Times New Roman", serif;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .center-wrap {
+      text-align: center;
+      max-width: 90vw;
+    }
+
+    .end-text {
+      font-size: clamp(3.8rem, 8vw, 6rem);
+      line-height: 1.05;
+      color: #ffffff;
+      font-weight: 900;
+      margin-bottom: 1.8rem;
+      text-shadow:
+        0 0 8px rgba(43, 28, 28, 0.9),
+        0 0 18px rgba(41, 29, 29, 0.8),
+        0 0 30px rgba(18, 12, 12, 0.7); /* soft glow */
+    }
+
+    .again-btn {
+      display: inline-block;
+      padding: 0.7rem 2.4rem;
+      border-radius: 999px;
+      border: 1px solid #ffffff;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      background: rgba(0,0,0,0.45);
+    }
+  </style>
+</head>
+<body>
+  <div class="center-wrap">
+    <div class="end-text">
+      You've reached the end.. Good Morning!
+    </div>
+    <a href="index.html" class="again-btn">again?</a>
+  </div>
+</body>
+</html>
