@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dreams Intro</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      font-family: Georgia, "Times New Roman", serif;
+      background: url("index bg.jpeg") center center / cover no-repeat fixed;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+
+    .wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .text {
+      max-width: 80vw;
+      color: rgb(255, 238, 238);
+      text-align: center;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      line-height: 0.9;
+      font-size: 6.5vw;
+      text-shadow: 0 0 12px rgba(255, 255, 255, 0.75);
+    }
+
+    /* ARROW BUTTON */
+    .arrow-button {
+      position: relative;
+      display: none;          /* hidden at first */
+      align-items: center;
+      justify-content: center;
+      width: 240px;
+      height: 70px;
+      background: black;
+      color: white;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      font-size: 3.5ch;      
+      border: none;
+      border-radius: 0;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .arrow-button::after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: -70px;
+      transform: translateY(-50%);
+      width: 0;
+      height: 0;
+      border-top: 35px solid transparent;
+      border-bottom: 35px solid transparent;
+      border-left: 70px solid black;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="text" id="mainText">
+      DO YOU EVER WONDER WHY WE DREAM WHAT WE DREAM?
+    </div>
+
+    <a href="map.html" class="arrow-button" id="goButton">
+      GO
+    </a>
+  </div>
+
+  <script>
+    const text = document.getElementById("mainText");
+    const goButton = document.getElementById("goButton");
+    let clicked = false;
+
+    document.body.addEventListener("click", (event) => {
+      if (event.target === goButton || goButton.contains(event.target)) return;
+
+      if (!clicked) {
+        text.textContent = "LET'S FIND OUT";
+        goButton.style.display = "inline-flex";  
+        clicked = true;
+      }
+    });
+  </script>
+</body>
+</html>
