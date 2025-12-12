@@ -22,7 +22,6 @@
       height: 100vh;
     }
 
-    /* Initial intro screen */
     .intro {
       position: fixed;
       top: 0;
@@ -83,154 +82,32 @@
       right: 30px;
     }
 
-    /* Click me button */
-    .click-button {
-      position: fixed;
-      padding: 15px 40px;
-      font-size: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      cursor: pointer;
-      font-family: 'Raleway', sans-serif;
-      font-weight: 100;
-      z-index: 500;
-      transition: all 0.3s ease;
-      opacity: 0;
-      pointer-events: none;
-    }
-
-    .click-button.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .click-button.stationary {
-      cursor: pointer;
-    }
-
-    .click-button:not(.stationary):hover {
-      cursor: pointer;
-    }
-
-    /* Popup */
-    .popup {
-      position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      background: rgba(0, 0, 0, 0.95);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      padding: 60px 80px;
-      z-index: 1000;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-      text-align: center;
-    }
-
-    .popup.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .popup h2 {
-      font-size: 32px;
-      color: rgba(255, 255, 255, 0.9);
-      margin-bottom: 30px;
-      font-weight: 100;
-    }
-
-    .popup button {
-      padding: 15px 50px;
-      font-size: 20px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      color: white;
-      cursor: pointer;
-      font-family: 'Raleway', sans-serif;
-      font-weight: 100;
-      transition: all 0.3s ease;
-    }
-
-    .popup button:hover {
-      background: rgba(255, 255, 255, 0.2);
-    }
-
-    .popup-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      background: rgba(0, 0, 0, 0.7);
-      z-index: 999;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.5s ease;
-    }
-
-    .popup-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    /* Zoom screen */
     .zoom-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100vh;
-      background: #000;
+      background: transparent;
       z-index: 2000;
-      opacity: 0;
       pointer-events: none;
-      transition: opacity 0.5s ease;
       overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .zoom-screen.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .zoom-instruction {
-      position: fixed;
-      top: 100px;
-      left: 50%;
-      transform: translateX(-50%);
-      text-align: center;
-      font-size: 32px;
-      color: rgba(255, 255, 255, 0.8);
-      font-weight: 100;
-      z-index: 2001;
     }
 
     .interpretation {
       position: fixed;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%) scale(0.3);
       max-width: 600px;
       padding: 40px;
       border: 1px solid rgba(255, 255, 255, 0.2);
       opacity: 0;
-      transition: opacity 0.6s ease, transform 0.6s ease;
+      transition: opacity 0.3s ease;
       text-align: center;
+      pointer-events: none;
+      background: rgba(0, 0, 0, 0.9);
     }
 
     .interpretation.visible {
       opacity: 1;
-      transform: translate(-50%, -50%) scale(1);
-    }
-
-    .interpretation.zoom-out {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(1.5);
     }
 
     .interpretation h3 {
@@ -247,12 +124,23 @@
       font-weight: 100;
     }
 
+    .hover-dot {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.5);
+      transform: translate(-50%, -50%);
+      pointer-events: auto;
+      cursor: pointer;
+      z-index: 2002;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; }
       to { opacity: 1; }
     }
 
-    /* Main canvas for snakes */
     .canvas {
       position: fixed;
       top: 0;
@@ -263,7 +151,6 @@
       z-index: 1;
     }
 
-    /* Individual snake */
     .snake {
       position: fixed;
       width: 150px;
@@ -284,22 +171,9 @@
       opacity: 0.8;
     }
 
-    /* Breathing instruction */
-    .breathe-text {
-      display: none;
-    }
-
-    /* End buttons */
-    .end-screen {
-      display: none;
-    }
-
-    /* Final message */
-    .final-message {
-      display: none;
-    }
-
-    /* Breathing overlay */
+    .breathe-text,
+    .end-screen,
+    .final-message,
     .breath-overlay {
       display: none;
     }
@@ -309,7 +183,6 @@
   <a href="Dream-3.html" class="nav-button prev-button">← Previous</a>
   <a href="Dream-5.html" class="nav-button next-button">Next →</a>
 
-  <!-- Intro screen -->
   <div class="intro" id="intro">
     <div>
       <div class="intro-text">You know this dream.</div>
@@ -317,25 +190,9 @@
     </div>
   </div>
 
-  <!-- Snake canvas -->
   <div class="canvas" id="canvas"></div>
 
-  <!-- Click me button -->
-  <button class="click-button" id="clickButton">Click Me</button>
-
-  <!-- Popup overlay -->
-  <div class="popup-overlay" id="popupOverlay"></div>
-
-  <!-- Popup -->
-  <div class="popup" id="popup">
-    <h2>Why do we dream of snakes?</h2>
-    <button id="whyButton">Why?</button>
-  </div>
-
-  <!-- Zoom screen -->
   <div class="zoom-screen" id="zoomScreen">
-    <div class="zoom-instruction">Zoom to know why</div>
-    
     <div class="interpretation" data-zoom="0">
       <h3>1. Threat</h3>
       <p>Dreaming of snakes can mean you feel threatened or sense something unpredictable in your life.</p>
@@ -373,56 +230,39 @@
   </div>
 
   <script>
-    // --- STATE MANAGEMENT ---
     let gameStarted = false;
     let snakes = [];
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
     const snakeImages = ['snake 1.png', 'snake 2.png', 'snake 3.png'];
-    let buttonEvading = true;
-    let buttonStartTime = 0;
 
-    // --- ELEMENTS ---
     const intro = document.getElementById('intro');
     const canvas = document.getElementById('canvas');
-    const clickButton = document.getElementById('clickButton');
-    const popup = document.getElementById('popup');
-    const popupOverlay = document.getElementById('popupOverlay');
-    const whyButton = document.getElementById('whyButton');
     const zoomScreen = document.getElementById('zoomScreen');
     const interpretations = document.querySelectorAll('.interpretation');
-    let currentZoomLevel = 0;
 
-    // --- INTRO CLICK ---
     intro.addEventListener('click', () => {
       intro.classList.add('hidden');
       setTimeout(() => intro.style.display = 'none', 1000);
       gameStarted = true;
       spawnSnakes();
-      
-      // Show button after snakes appear
-      setTimeout(() => {
-        showClickButton();
-      }, 2000);
+      zoomScreen.classList.add('show');
+      setupClickDots();
     });
 
-    // --- SNAKE GENERATION ---
     function spawnSnakes() {
-      // Create 30-45 snakes randomly positioned with spacing
-      const numSnakes = Math.floor(Math.random() * 16) + 30; // 30-45 snakes
+      const numSnakes = Math.floor(Math.random() * 16) + 30;
       const positions = [];
-      const minDistance = 400; // Minimum distance between snakes (reduced to fit more)
+      const minDistance = 400;
       
       for (let i = 0; i < numSnakes; i++) {
         let x, y;
         let attempts = 0;
         let validPosition = false;
         
-        // Try to find a position that doesn't overlap with existing snakes
         while (!validPosition && attempts < 50) {
           x = Math.random() * (window.innerWidth - 400) + 200;
           y = Math.random() * (window.innerHeight - 400) + 200;
-          
           validPosition = true;
           for (let pos of positions) {
             const dist = Math.sqrt(Math.pow(x - pos.x, 2) + Math.pow(y - pos.y, 2));
@@ -451,23 +291,18 @@
       img.src = imageSrc;
       snake.appendChild(img);
       
-      // Random size variation - some much bigger
       const sizeRoll = Math.random();
       let size;
       if (sizeRoll < 0.1) {
-        // 10% chance: extra large
-        size = Math.random() * 150 + 250; // 250-400px
+        size = Math.random() * 150 + 250;
       } else if (sizeRoll < 0.5) {
-        // 40% chance: large
-        size = Math.random() * 100 + 150; // 150-250px
+        size = Math.random() * 100 + 150;
       } else {
-        // 50% chance: medium
-        size = Math.random() * 80 + 100; // 100-180px
+        size = Math.random() * 80 + 100;
       }
       snake.style.width = size + 'px';
       snake.style.height = size + 'px';
       
-      // Random rotation
       const rotation = Math.random() * 360;
       snake.style.transform = `rotate(${rotation}deg)`;
       
@@ -476,11 +311,8 @@
       
       canvas.appendChild(snake);
       
-      // Random follow speed - some snakes follow slower/faster
-      const followSpeed = Math.random() * 0.02 + 0.01; // 0.01 to 0.03
-      
-      // Random distance preference - some stay farther from cursor
-      const distancePreference = Math.random() * 0.8 + 0.9; // 0.9 to 1.7
+      const followSpeed = Math.random() * 0.02 + 0.01;
+      const distancePreference = Math.random() * 0.8 + 0.9;
       
       const snakeData = {
         element: snake,
@@ -491,145 +323,87 @@
         rotation: rotation,
         followSpeed: followSpeed,
         distancePreference: distancePreference,
-        offsetX: (Math.random() - 0.5) * 800, // Random offset -400 to 400
+        offsetX: (Math.random() - 0.5) * 800,
         offsetY: (Math.random() - 0.5) * 800
       };
       
       snakes.push(snakeData);
       
-      // Make visible after a delay
       setTimeout(() => snake.classList.add('visible'), Math.random() * 1000 + 500);
     }
 
-    // --- MOUSE MOVEMENT ---
     document.addEventListener('mousemove', (e) => {
       if (!gameStarted) return;
-      
       mouseX = e.clientX;
       mouseY = e.clientY;
-      
-      // Check if cursor is near button
-      if (buttonEvading && clickButton.classList.contains('show')) {
-        const buttonRect = clickButton.getBoundingClientRect();
-        const buttonCenterX = buttonRect.left + buttonRect.width / 2;
-        const buttonCenterY = buttonRect.top + buttonRect.height / 2;
-        
-        const distance = Math.sqrt(
-          Math.pow(mouseX - buttonCenterX, 2) + 
-          Math.pow(mouseY - buttonCenterY, 2)
-        );
-        
-        // If cursor gets within 150px, move button
-        if (distance < 150) {
-          moveButton();
+    });
+
+    function setupClickDots() {
+      const padding = 150;
+      const usedPositions = [];
+
+      interpretations.forEach((interp) => {
+        let hx, hy;
+        let tries = 0;
+        let ok = false;
+        const minDotDistance = 180;
+
+        while (!ok && tries < 50) {
+          hx = Math.random() * (window.innerWidth - padding * 2) + padding;
+          hy = Math.random() * (window.innerHeight - padding * 2) + padding;
+          ok = true;
+          for (const pos of usedPositions) {
+            const d = Math.sqrt((hx - pos.x) ** 2 + (hy - pos.y) ** 2);
+            if (d < minDotDistance) {
+              ok = false;
+              break;
+            }
+          }
+          tries++;
         }
-      }
-    });
 
-    // --- CLICK BUTTON LOGIC ---
-    function showClickButton() {
-      buttonStartTime = Date.now();
-      buttonEvading = true;
-      moveButton();
-      clickButton.classList.add('show');
-      
-      // After 3 seconds, make it stationary
-      setTimeout(() => {
-        buttonEvading = false;
-        clickButton.classList.add('stationary');
-      }, 3000);
+        usedPositions.push({ x: hx, y: hy });
+
+        const dot = document.createElement('div');
+        dot.classList.add('hover-dot');
+        dot.style.left = hx + 'px';
+        dot.style.top = hy + 'px';
+        zoomScreen.appendChild(dot);
+
+        dot.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (interp.classList.contains('visible')) {
+            interp.classList.remove('visible');
+          } else {
+            interpretations.forEach(i => i.classList.remove('visible'));
+            interp.style.left = hx + 'px';
+            interp.style.top = hy + 'px';
+            interp.classList.add('visible');
+          }
+        });
+      });
+
+      zoomScreen.addEventListener('click', () => {
+        interpretations.forEach(i => i.classList.remove('visible'));
+      });
     }
 
-    function moveButton() {
-      const padding = 100;
-      const x = Math.random() * (window.innerWidth - padding * 2) + padding;
-      const y = Math.random() * (window.innerHeight - padding * 2) + padding;
-      
-      clickButton.style.left = x + 'px';
-      clickButton.style.top = y + 'px';
-    }
-
-    clickButton.addEventListener('click', () => {
-      if (!buttonEvading) {
-        // Button was successfully clicked - show popup
-        clickButton.classList.remove('show');
-        popupOverlay.classList.add('show');
-        popup.classList.add('show');
-      }
-    });
-
-    whyButton.addEventListener('click', () => {
-      // Hide popup and show zoom screen
-      popup.classList.remove('show');
-      popupOverlay.classList.remove('show');
-      zoomScreen.classList.add('show');
-    });
-
-    // --- ZOOM DETECTION ---
-    let lastZoom = 1;
-    
-    // Detect zoom through wheel events
-    zoomScreen.addEventListener('wheel', (e) => {
-      if (e.deltaY < 0) {
-        // Zooming in (scrolling up / pinch out)
-        showNextInterpretation();
-      }
-    }, { passive: true });
-
-    // Detect zoom through keyboard (Ctrl/Cmd + Plus)
-    document.addEventListener('keydown', (e) => {
-      if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
-        e.preventDefault();
-        showNextInterpretation();
-      }
-    });
-
-    // Detect browser zoom changes
-    window.addEventListener('resize', () => {
-      const currentZoom = window.devicePixelRatio;
-      if (currentZoom > lastZoom && zoomScreen.classList.contains('show')) {
-        showNextInterpretation();
-      }
-      lastZoom = currentZoom;
-    });
-
-    function showNextInterpretation() {
-      if (currentZoomLevel < interpretations.length) {
-        // Hide previous interpretation with zoom out effect
-        if (currentZoomLevel > 0) {
-          interpretations[currentZoomLevel - 1].classList.remove('visible');
-          interpretations[currentZoomLevel - 1].classList.add('zoom-out');
-        }
-        
-        // Show current interpretation with zoom in effect
-        interpretations[currentZoomLevel].classList.remove('zoom-out');
-        interpretations[currentZoomLevel].classList.add('visible');
-        currentZoomLevel++;
-      }
-    }
-
-    // --- ANIMATION LOOP ---
     function animate() {
       if (gameStarted) {
         snakes.forEach(snake => {
-          // Calculate target position with offset
           const targetX = mouseX + snake.offsetX;
           const targetY = mouseY + snake.offsetY;
           
-          // Calculate direction to target
           const dx = targetX - snake.x;
           const dy = targetY - snake.y;
           const distance = Math.sqrt(dx * dx + dy * dy);
           
-          // Only move if not too close (maintain some distance)
           const minDistance = 200 * snake.distancePreference;
           if (distance > minDistance) {
-            // Move toward target with individual speed
             snake.x += dx * snake.followSpeed;
             snake.y += dy * snake.followSpeed;
           }
           
-          // Update position while maintaining rotation
           snake.element.style.left = snake.x + 'px';
           snake.element.style.top = snake.y + 'px';
         });
