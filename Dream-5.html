@@ -14,7 +14,11 @@
     }
 
     body {
-      background: #ff0000;
+      background: #000;
+      background-image: url("time.jpeg");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
       min-height: 100vh;
       font-family: 'Bebas Neue', sans-serif;
       overflow: hidden;
@@ -47,58 +51,38 @@
       right: 30px;
     }
 
-    .background-clocks {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100vh;
-      z-index: 0;
-      pointer-events: none;
-    }
-
     .instruction {
-      font-size: 36px;
+      font-size: 40px;
       color: #ffffff;
       font-weight: 400;
-      margin-bottom: 50px;
+      margin-bottom: 40px;
       text-align: center;
       z-index: 10;
       position: relative;
+      text-shadow: 0 0 8px rgba(0,0,0,0.5);
     }
 
     .clock-container {
       position: relative;
-      width: 300px;
-      height: 300px;
+      width: 420px;
+      height: 420px;
       z-index: 10;
     }
 
     .clock {
       width: 100%;
       height: 100%;
-      border: 4px solid #000000;
+      border: 6px solid #000000;
       border-radius: 50%;
       position: relative;
       background: #ffffff;
-      box-shadow: 0 0 30px rgba(43, 19, 19, 0.3);
-    }
-
-    .bg-clock {
-      position: absolute;
-      border: 2px solid rgba(50, 19, 19, 0.999);
-      border-radius: 50%;
-      background: rgba(0, 0, 0, 0.381);
-    }
-
-    .bg-clock .hand {
-      background: rgba(35, 11, 11, 0.391);
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
     }
 
     .clock-center {
       position: absolute;
-      width: 16px;
-      height: 16px;
+      width: 20px;
+      height: 20px;
       background: #100202;
       border-radius: 50%;
       top: 50%;
@@ -118,9 +102,9 @@
     }
 
     .minute-hand {
-      width: 4px;
-      height: 120px;
-      margin-left: -2px;
+      width: 5px;
+      height: 180px;
+      margin-left: -2.5px;
     }
 
     .too-late {
@@ -128,13 +112,14 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 48px;
+      font-size: 56px;
       color: #ffffff;
       font-weight: 400;
       opacity: 0;
       pointer-events: none;
       animation: fadeInOut 0.8s ease;
       z-index: 100;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     @keyframes fadeInOut {
@@ -148,7 +133,7 @@
       left: 0;
       width: 100%;
       height: 100vh;
-      background: #ff0000;
+      background: rgba(255, 0, 0, 0.82);
       z-index: 1000;
       display: none;
       cursor: pointer;
@@ -167,12 +152,14 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      font-size: 36px;
+      font-size: 44px;
       color: #ffffff;
       font-weight: 400;
       text-align: center;
       opacity: 0;
       animation: fadeIn 2s ease forwards;
+      max-width: 80%;
+      text-shadow: 0 0 10px rgba(0,0,0,0.6);
     }
 
     @keyframes fadeIn {
@@ -181,8 +168,8 @@
 
     .interpretation {
       position: fixed;
-      max-width: 500px;
-      padding: 30px;
+      max-width: 650px;
+      padding: 40px;
       border: none;
       background: transparent;
       opacity: 0;
@@ -195,15 +182,15 @@
     }
 
     .interpretation h3 {
-      font-size: 24px;
+      font-size: 30px;
       color: #000000;
-      margin-bottom: 10px;
+      margin-bottom: 14px;
       font-weight: 400;
     }
 
     .interpretation p {
-      font-size: 16px;
-      color: #fff;
+      font-size: 20px;
+      color: #ffffff;
       line-height: 1.6;
       font-weight: 400;
     }
@@ -212,8 +199,6 @@
 <body>
   <a href="Dream-4.html" class="nav-button prev-button">← Previous</a>
   <a href="Dream-6.html" class="nav-button next-button">Next →</a>
-
-  <div class="background-clocks" id="bgClocks"></div>
 
   <div class="instruction" id="instruction">Catch the time</div>
   
@@ -230,64 +215,22 @@
     <div class="intro-text" id="introText">This is why we dream of being late...</div>
   </div>
 
+  <audio id="alarmAudio" src="alarm.mp3" preload="auto"></audio>
+
   <script>
     const minuteHand = document.getElementById('minuteHand');
     const instruction = document.getElementById('instruction');
     const interpretationScreen = document.getElementById('interpretationScreen');
     const introText = document.getElementById('introText');
-    const bgClocks = document.getElementById('bgClocks');
+    const alarmAudio = document.getElementById('alarmAudio');
 
     let angle = 0;
-    let speed = 5; // degrees per frame
+    let speed = 5;
     let evading = true;
     const startTime = Date.now();
-
-    // Create background clocks
-    function createBackgroundClocks() {
-      const sizes = [80, 120, 100, 150, 90, 130, 110];
-      const positions = [
-        { top: '10%', left: '10%' },
-        { top: '15%', right: '15%' },
-        { top: '60%', left: '5%' },
-        { top: '70%', right: '10%' },
-        { top: '30%', left: '80%' },
-        { top: '80%', left: '40%' },
-        { top: '40%', right: '5%' }
-      ];
-
-      positions.forEach((pos, i) => {
-        const clock = document.createElement('div');
-        clock.className = 'bg-clock';
-        clock.style.width = sizes[i] + 'px';
-        clock.style.height = sizes[i] + 'px';
-        Object.assign(clock.style, pos);
-
-        const hand = document.createElement('div');
-        hand.className = 'hand minute-hand';
-        hand.style.height = (sizes[i] * 0.4) + 'px';
-        
-        const center = document.createElement('div');
-        center.className = 'clock-center';
-        center.style.width = '8px';
-        center.style.height = '8px';
-        center.style.background = 'rgba(255, 68, 68, 0.3)';
-
-        clock.appendChild(hand);
-        clock.appendChild(center);
-        bgClocks.appendChild(clock);
-
-      
-        let bgAngle = Math.random() * 360;
-        const bgSpeed = Math.random() * 3 + 2;
-        setInterval(() => {
-          bgAngle += bgSpeed;
-          if (bgAngle >= 360) bgAngle = 0;
-          hand.style.transform = `rotate(${bgAngle}deg)`;
-        }, 50);
-      });
-    }
-
-    createBackgroundClocks();
+    let animationId = null;
+    let alarmPlayed = false;
+    let userInteracted = false;
 
     const interpretations = [
       {
@@ -320,56 +263,50 @@
       }
     ];
 
-    // Animate clock hand
     function animate() {
       angle += speed;
       if (angle >= 360) angle = 0;
-      
       minuteHand.style.transform = `rotate(${angle}deg)`;
-      
-      
+
       const elapsed = Date.now() - startTime;
       if (elapsed > 6000 && evading) {
         evading = false;
+        cancelAnimationFrame(animationId);
         startInterpretations();
         return;
       }
-      
+
       if (evading) {
-        requestAnimationFrame(animate);
+        animationId = requestAnimationFrame(animate);
       }
     }
-    animate();
+    animationId = requestAnimationFrame(animate);
 
-    // Mouse tracking
     let mouseX = 0;
     let mouseY = 0;
 
     document.addEventListener('mousemove', (e) => {
+      userInteracted = true;
+      if (!evading) return;
+
       mouseX = e.clientX;
       mouseY = e.clientY;
+
+      const handRect = minuteHand.getBoundingClientRect();
+      const handCenterX = handRect.left + handRect.width / 2;
+      const handCenterY = handRect.top + handRect.height / 2;
       
-      if (evading) {
-        const handRect = minuteHand.getBoundingClientRect();
-        const handCenterX = handRect.left + handRect.width / 2;
-        const handCenterY = handRect.top + handRect.height / 2;
-        
-        const distance = Math.sqrt(
-          Math.pow(mouseX - handCenterX, 2) + 
-          Math.pow(mouseY - handCenterY, 2)
-        );
-        
-        // Speed up when mouse gets close
-        if (distance < 100) {
-          speed = 15;
-        } else {
-          speed = 5;
-        }
+      const distance = Math.hypot(mouseX - handCenterX, mouseY - handCenterY);
+      
+      if (distance < 120) {
+        speed = 15;
+      } else {
+        speed = 5;
       }
     });
 
-    // Click detection
     minuteHand.addEventListener('click', () => {
+      userInteracted = true;
       if (evading) {
         showTooLate();
       }
@@ -380,18 +317,24 @@
       tooLate.className = 'too-late';
       tooLate.textContent = 'Too late!';
       document.body.appendChild(tooLate);
-      
       setTimeout(() => tooLate.remove(), 800);
     }
 
-    // Start showing interpretations
     function startInterpretations() {
       instruction.style.display = 'none';
       document.querySelector('.clock-container').style.display = 'none';
-      document.getElementById('bgClocks').style.display = 'none';
       interpretationScreen.classList.add('show');
-      
-      // Show intro text first
+
+      if (!alarmPlayed && userInteracted) {
+        alarmPlayed = true;
+        alarmAudio.currentTime = 0;
+        alarmAudio.play().catch(() => {});
+        setTimeout(() => {
+          alarmAudio.pause();
+          alarmAudio.currentTime = 0;
+        }, 3000);
+      }
+
       setTimeout(() => {
         introText.style.display = 'none';
         setupClickInterpretations();
@@ -407,38 +350,33 @@
     }
 
     function showNextInterpretation() {
-      // Remove previous interpretation
       if (currentInterpEl) {
         currentInterpEl.remove();
       }
 
       if (currentInterpIndex >= interpretations.length) {
-        return; // All interpretations shown
+        interpretationScreen.removeEventListener('click', showNextInterpretation);
+        return;
       }
 
       const interp = interpretations[currentInterpIndex];
-      
-      // Create interpretation element
+
       currentInterpEl = document.createElement('div');
       currentInterpEl.className = 'interpretation';
-      currentInterpEl.style.border = 'none';
-      currentInterpEl.style.background = 'transparent';
       currentInterpEl.innerHTML = `
         <h3>${interp.title}</h3>
         <p>${interp.text}</p>
       `;
-      
-      // Random position
-      const x = Math.random() * (window.innerWidth - 550) + 25;
-      const y = Math.random() * (window.innerHeight - 250) + 100;
+
+      const x = Math.random() * (window.innerWidth - 700) + 50;
+      const y = Math.random() * (window.innerHeight - 300) + 100;
       currentInterpEl.style.left = x + 'px';
       currentInterpEl.style.top = y + 'px';
-      
+
       interpretationScreen.appendChild(currentInterpEl);
-      
-      // Fade in
+
       setTimeout(() => currentInterpEl.classList.add('visible'), 50);
-      
+
       currentInterpIndex++;
     }
   </script>
